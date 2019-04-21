@@ -1,0 +1,13 @@
+#################
+## Eclipse
+#################
+/target
+/imgs
+/.settings/
+
+*.pydevproject
+.project
+.metadata
+bin/
+tmp/
+
