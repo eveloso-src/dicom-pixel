@@ -2,6 +2,7 @@ package laucher;
 
 import java.io.IOException;
 
+import fxml.controller.WebCamPreviewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,7 +13,7 @@ public class WebCamAppLauncher extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		
+
 		Parent root = null;
 		try {
 			root = FXMLLoader.load(getClass().getResource("/fxml/gui/WebCamPreview2.fxml"));
@@ -20,14 +21,15 @@ public class WebCamAppLauncher extends Application {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	    
-        Scene scene = new Scene(root, 900, 990);
-    
-        primaryStage.setMaximized(true);
-        primaryStage.setTitle("WebCam Capture Sarxos API using JavaFx with FXML ");
-        primaryStage.setScene(scene);
-        primaryStage.centerOnScreen();
-        primaryStage.show();
+		int widthImg = (int) WebCamPreviewController.IMAGE_WIDTH;
+		int heightImg = (int) WebCamPreviewController.IMAGE_HEIGTH;
+		Scene scene = new Scene(root, widthImg, heightImg);
+
+		primaryStage.setMaximized(true);
+		primaryStage.setTitle("WebCam Capture Sarxos API using JavaFx with FXML ");
+		primaryStage.setScene(scene);
+		primaryStage.centerOnScreen();
+		primaryStage.show();
 	}
 
 	public static void main(String[] args) {

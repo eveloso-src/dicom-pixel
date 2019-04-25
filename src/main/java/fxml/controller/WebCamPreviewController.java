@@ -3,13 +3,9 @@ package fxml.controller;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.net.URL;
-import java.util.ArrayDeque;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import com.github.sarxos.webcam.Webcam;
-import com.github.sarxos.webcam.util.jh.JHGrayFilter;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -19,7 +15,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,11 +23,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 
 @SuppressWarnings("restriction")
 public class WebCamPreviewController implements Initializable {
 
+	public static final double IMAGE_WIDTH = 800;
+	public static final double IMAGE_HEIGTH = 800;
 	@FXML
 	Button btnStartCamera;
 	@FXML
@@ -43,10 +39,12 @@ public class WebCamPreviewController implements Initializable {
 	ComboBox<WebCamInfo> cbCameraOptions;
 	@FXML
 	BorderPane bpWebCamPaneHolder;
-	@FXML
-	FlowPane fpBottomPane;
+//	@FXML
+//	FlowPane fpBottomPane;
 	@FXML
 	ImageView imgWebCamCapturedImage;
+	@FXML
+	javafx.scene.control.Label labelFPS;
 
 	@FXML
 	ImageView imgWebCamCapturedImage2;
@@ -54,10 +52,8 @@ public class WebCamPreviewController implements Initializable {
 	ImageView imgWebCamCapturedImage3;
 
 	private BufferedImage grabbedImage;
-	private BufferedImage bwImage;
-	private BufferedImage bwImage2;
-	
-	private BufferedImage[] arrayImg;
+
+	private CapturedImage[] arrayImg;
 	// private WebcamPanel selWebCamPanel = null;
 	private Webcam selWebCam = null;
 
@@ -70,10 +66,20 @@ public class WebCamPreviewController implements Initializable {
 
 	private String cameraListPromptText = "Seleccion Camara";
 
+	
+	
+	public javafx.scene.control.Label getLabelFPS() {
+		return labelFPS;
+	}
+
+	public void setLabelFPS(String value) {
+		labelFPS.setText(value);
+	}
+
 	// @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
-		fpBottomPane.setDisable(true);
+//		fpBottomPane.setDisable(true);
 		ObservableList<WebCamInfo> options = FXCollections.observableArrayList();
 		int webCamCounter = 0;
 		for (Webcam webcam : Webcam.getWebcams()) {
@@ -93,30 +99,26 @@ public class WebCamPreviewController implements Initializable {
 			// @Override
 			public void changed(ObservableValue<? extends WebCamInfo> arg0, WebCamInfo arg1, WebCamInfo arg2) {
 				if (arg2 != null) {
-
 					System.out.println(
 							"WebCam Index: " + arg2.getWebCamIndex() + ": WebCam Name:" + arg2.getWebCamName());
 					initializeWebCam(arg2.getWebCamIndex());
 				}
 			}
 		});
-		Platform.runLater(new Runnable() {
 
+
+		Platform.runLater(new Runnable() {
 			// @Override
 			public void run() {
-
 				setImageViewSize();
-
 			}
 		});
 
 	}
 
 	protected void setImageViewSize() {
-
-		System.out.println("640x480");
-		double height = 1000; // bpWebCamPaneHolder.getHeight();
-		double width = 1000; // bpWebCamPaneHolder.getWidth();
+		double height = IMAGE_HEIGTH; // bpWebCamPaneHolder.getHeight();
+		double width = IMAGE_WIDTH; // bpWebCamPaneHolder.getWidth();
 		imgWebCamCapturedImage.setFitHeight(height);
 		imgWebCamCapturedImage.setFitWidth(width);
 		imgWebCamCapturedImage.prefHeight(height);
@@ -129,11 +131,12 @@ public class WebCamPreviewController implements Initializable {
 		imgWebCamCapturedImage2.prefWidth(width);
 		imgWebCamCapturedImage2.setPreserveRatio(true);
 
-		imgWebCamCapturedImage3.setFitHeight(height/2);
-		imgWebCamCapturedImage3.setFitWidth(width/2);
-		imgWebCamCapturedImage3.prefHeight(height/2);
-		imgWebCamCapturedImage3.prefWidth(width/2);
+		imgWebCamCapturedImage3.setFitHeight(height / 2);
+		imgWebCamCapturedImage3.setFitWidth(width / 2);
+		imgWebCamCapturedImage3.prefHeight(height / 2);
+		imgWebCamCapturedImage3.prefWidth(width / 2);
 		imgWebCamCapturedImage3.setPreserveRatio(true);
+
 	}
 
 	protected void initializeWebCam(final int webCamIndex) {
@@ -159,76 +162,17 @@ public class WebCamPreviewController implements Initializable {
 		};
 
 		new Thread(webCamIntilizer).start();
-		fpBottomPane.setDisable(false);
+//		fpBottomPane.setDisable(false);
 		btnStartCamera.setDisable(true);
 	}
-
+	
 	protected void startWebCamStream() {
 
+
 		stopCamera = false;
-		Task<Void> task = new Task<Void>() {
-
-			@Override
-			protected Void call() throws Exception {
-				// SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_hh_mm_ss_SSS");
-				// ByteArrayOutputStream baos;
-				// InputStream bais;
-				// ToGray tg = new ToGray();
-
-				ArrayDeque<BufferedImage> imagenes = new ArrayDeque<BufferedImage>(1000);
-
-				int nThreads = Runtime.getRuntime().availableProcessors();
-				System.out.println("procesadores: " + nThreads);
-				ExecutorService executor = Executors.newSingleThreadExecutor();
-
-				while (!stopCamera) {
-					try {
-						if ((grabbedImage = webcamDefault.getImage()) != null) {
-							arrayImg = ToGray.convertBufferedImage(grabbedImage, imagenes);
-
-							bwImage = arrayImg[0];
-							bwImage2 = arrayImg[1];
-							
-							// String file = "imgs/img_" + sdf.format(new Date()) + ".jpg";
-							// ImageIO.write(grabbedImage, "jpg", new File(file));
-							// Platform.runLater(
-
-							// executor.execute(
-							// IntStream.range(0, 100).forEach(i -> service.submit(new Task(i)));
-							executor.submit(new Runnable() {
-								// @Override
-								public void run() {
-									final Image mainiamge = SwingFXUtils.toFXImage(grabbedImage, null);
-									final Image mainiamge2 = SwingFXUtils.toFXImage(bwImage, null);
-									final Image mainiamge3 = SwingFXUtils.toFXImage(bwImage2, null);
-									// Color result = mainiamge.getPixelReader().getColor(0, 0);
-									// System.out.println("result: " + result);
-									imageProperty.set(mainiamge);
-									imageProperty2.set(mainiamge2);
-									imageProperty3.set(mainiamge3);
-
-								}
-
-							});
-
-							// );
-
-							// grabbedImage.flush();
-
-						}
-					} catch (Exception e) {
-					} finally {
-
-					}
-
-				}
-
-				return null;
-
-			}
-
-		};
+		TaskCamera task = new TaskCamera(stopCamera, grabbedImage, webcamDefault, arrayImg, imageProperty, imageProperty2, imageProperty3);
 		Thread th = new Thread(task);
+		labelFPS.textProperty().bind(task.messageProperty());
 		th.setDaemon(true);
 		th.start();
 		imgWebCamCapturedImage.imageProperty().bind(imageProperty);
@@ -258,11 +202,11 @@ public class WebCamPreviewController implements Initializable {
 
 	}
 
-	private static final JHGrayFilter GRAY = new JHGrayFilter();
+//	private static final JHGrayFilter GRAY = new JHGrayFilter();
 
-	public BufferedImage transform(BufferedImage image) {
-		return GRAY.filter(image, null);
-	}
+//	public BufferedImage transform(BufferedImage image) {
+//		return GRAY.filter(image, null);
+//	}
 
 	public void disposeCamera(ActionEvent event) {
 		stopCamera = true;
@@ -298,4 +242,6 @@ public class WebCamPreviewController implements Initializable {
 		}
 
 	}
+	
+	
 }
