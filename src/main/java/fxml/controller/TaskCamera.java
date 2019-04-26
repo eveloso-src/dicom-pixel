@@ -64,6 +64,7 @@ public class TaskCamera extends Task<Void> {
 		SimpleDateFormat ssdf = new SimpleDateFormat("ss");
 		int contadorFPS = 0;
 		Calendar inicio, fin;
+		double value;
 		while (!stopCamera) {
 			try {
 				if ((grabbedImage = webcamDefault.getImage()) != null) {
@@ -72,17 +73,12 @@ public class TaskCamera extends Task<Void> {
 					inicio = Calendar.getInstance();
 					arrayImg = tg.convertBufferedImage(grabbedImage, imagenes);
 					fin = Calendar.getInstance();
-					long differ = fin.getTimeInMillis() - inicio.getTimeInMillis();
-
-//					System.out.println(imagenes.size());
-					
-					contadorFPS++;
-//					System.out.println(contadorFPS);
 					if (!ssdf.format(new Date()).equals(segundo)) {
 						segundo = ssdf.format(new Date());
-//						System.out.println(contadorFPS + " " + imagenes.size());
-						updateMessage(String.valueOf(contadorFPS));
+						value = ((double)1/(fin.getTimeInMillis() - inicio.getTimeInMillis())*1000);
+						updateMessage(String.valueOf(value).substring(0, String.valueOf(value).indexOf(".")));
 //						contadorFPS = 0;
+						inicio = fin;
 					}
 
 					
