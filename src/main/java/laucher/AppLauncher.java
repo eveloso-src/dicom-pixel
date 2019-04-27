@@ -1,6 +1,9 @@
 package laucher;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 import fxml.controller.WebCamPreviewController;
 import javafx.application.Application;
@@ -9,7 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class WebCamAppLauncher extends Application {
+public class AppLauncher extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -21,8 +24,8 @@ public class WebCamAppLauncher extends Application {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		int widthImg = (int) WebCamPreviewController.IMAGE_WIDTH;
-		int heightImg = (int) WebCamPreviewController.IMAGE_HEIGTH;
+		int widthImg = Integer.valueOf( AppLauncher.getProp("width")).intValue();
+		int heightImg = Integer.valueOf( AppLauncher.getProp("height")).intValue();
 		Scene scene = new Scene(root, widthImg, heightImg);
 
 		primaryStage.setMaximized(true);
@@ -30,6 +33,27 @@ public class WebCamAppLauncher extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.centerOnScreen();
 		primaryStage.show();
+	}
+
+	public static String getProp(String propName) {
+		Properties prop = new Properties();
+		String value = null;
+		try {
+			InputStream input = new FileInputStream("src/main/resources/params.properties");
+
+
+			// load a properties file
+			prop.load(input);
+
+			// get the property value and print it out
+			value = prop.getProperty(propName);
+
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		
+		return value;
+
 	}
 
 	public static void main(String[] args) {

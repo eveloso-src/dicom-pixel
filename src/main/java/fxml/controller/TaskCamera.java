@@ -1,16 +1,13 @@
 package fxml.controller;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import javax.imageio.ImageIO;
 
 import com.github.sarxos.webcam.Webcam;
 
@@ -21,13 +18,11 @@ import javafx.scene.image.Image;
 
 public class TaskCamera extends Task<Void> {
 
-	private static long start;
-	private static long ends;
-	private boolean stopCamera = false;
+	public boolean stopCamera = false;
 	BufferedImage grabbedImage;
 	Webcam webcamDefault;
-	BufferedImage // 
-	[] //CapturedImage
+	BufferedImage //
+	[] // CapturedImage
 	arrayImg;
 	private BufferedImage bwImage;
 	private BufferedImage bwImage2;
@@ -45,8 +40,8 @@ public class TaskCamera extends Task<Void> {
 		this.imageProperty2 = imageProperty2;
 		this.imageProperty3 = imageProperty3;
 
-//		this.arrayImg = arrayImg;
-		
+		// this.arrayImg = arrayImg;
+
 	}
 
 	@Override
@@ -54,7 +49,7 @@ public class TaskCamera extends Task<Void> {
 
 		ArrayDeque<BufferedImage> imagenes = new ArrayDeque<BufferedImage>(1000);
 
-//		int nThreads = Runtime.getRuntime().availableProcessors();
+		// int nThreads = Runtime.getRuntime().availableProcessors();
 		// System.out.println("procesadores: " + nThreads);
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -62,30 +57,21 @@ public class TaskCamera extends Task<Void> {
 		ToGray tg = new ToGray();
 		String segundo = "";
 		SimpleDateFormat ssdf = new SimpleDateFormat("ss");
-		int contadorFPS = 0;
 		Calendar inicio, fin;
 		double value;
 		while (!stopCamera) {
 			try {
 				if ((grabbedImage = webcamDefault.getImage()) != null) {
-					TaskCamera.timeStart(Calendar.getInstance().getTime().getTime());
-					
 					inicio = Calendar.getInstance();
 					arrayImg = tg.convertBufferedImage(grabbedImage, imagenes);
 					fin = Calendar.getInstance();
 					if (!ssdf.format(new Date()).equals(segundo)) {
 						segundo = ssdf.format(new Date());
-						value = ((double)1/(fin.getTimeInMillis() - inicio.getTimeInMillis())*1000);
+						value = ((double) 1 / (fin.getTimeInMillis() - inicio.getTimeInMillis()) * 1000);
 						updateMessage(String.valueOf(value).substring(0, String.valueOf(value).indexOf(".")));
-//						contadorFPS = 0;
 						inicio = fin;
 					}
 
-					
-					
-					// System.out.println(String.valueOf(tg.getFps()));
-
-//					label.setText(String.valueOf(tg.getFps()));
 					bwImage = arrayImg[0];
 					bwImage2 = arrayImg[1];
 
@@ -100,50 +86,53 @@ public class TaskCamera extends Task<Void> {
 							imageProperty3.set(mainiamge3);
 						}
 					});
+
+					if (imagenes.size() == 100) {
+						stopCamera = true;
+					}
 				}
 			} catch (Exception e) {
-			} finally {
 			}
 		}
 		
-		
+		BufferedImage frame;
+		// play images
+		while (stopCamera) {
+			Iterator<BufferedImage> it = imagenes.iterator();
+			while(it.hasNext()) {
+				frame = it.next();
+				imageProperty.set(SwingFXUtils.toFXImage(frame, null));
+				imageProperty2.set(SwingFXUtils.toFXImage(frame, null));
+				imageProperty3.set(SwingFXUtils.toFXImage(frame, null));
+			}
+		}
 
-//		TaskCamera.saveImages(imagenes);
+		// TaskCamera.saveImages(imagenes);
 		return null;
 	}
 
-	private static void timeStart(long time) {
-		start = time;
-		
-	}
-
-	public static void timeEnds(long time) {
-		ends = time;
-//		System.out.println(ends - start);
-	}
-	
-//	public static void saveImages(ArrayDeque<BufferedImage> imagenes) {
-//		try {
-//			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_hh_mm__ss__SSS");
-//
-//			if (imagenes.size() == 200) {
-//				System.out.println("guardando...");
-//				TaskCamera.timeEnds(Calendar.getInstance().getTime().getTime());
-//				for (int i = 0; i < imagenes.size(); i++) {
-//					CapturedImage capImg = (CapturedImage)imagenes.poll();
-//					
-//					String fileOutput = "imgs/out" + sdf.format(capImg.getTime()) + ".gif";
-//					File outputPhoto = new File(fileOutput);
-//					ImageIO.write(capImg, "gif", outputPhoto);
-//
-//				
-//				}
-//			}
-//
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//
-//		}
-//	}
+	// public static void saveImages(ArrayDeque<BufferedImage> imagenes) {
+	// try {
+	// SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_hh_mm__ss__SSS");
+	//
+	// if (imagenes.size() == 200) {
+	// System.out.println("guardando...");
+	// TaskCamera.timeEnds(Calendar.getInstance().getTime().getTime());
+	// for (int i = 0; i < imagenes.size(); i++) {
+	// CapturedImage capImg = (CapturedImage)imagenes.poll();
+	//
+	// String fileOutput = "imgs/out" + sdf.format(capImg.getTime()) + ".gif";
+	// File outputPhoto = new File(fileOutput);
+	// ImageIO.write(capImg, "gif", outputPhoto);
+	//
+	//
+	// }
+	// }
+	//
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	//
+	// }
+	// }
 
 };

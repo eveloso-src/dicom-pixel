@@ -12,6 +12,8 @@ import java.util.Date;
 
 import javax.imageio.ImageIO;
 
+import laucher.AppLauncher;
+
 public class ToGray {
 
 	public static BufferedImage[] convertBufferedImage(BufferedImage img, ArrayDeque<BufferedImage> imagenes)
@@ -31,9 +33,13 @@ public class ToGray {
 				// + raster.getSample(i, j, 2) * 0.07).byteValue();
 			}
 		}
+		
+		int widthFile = Integer.valueOf( AppLauncher.getProp("widthFile")).intValue();
+		int heightFile = Integer.valueOf( AppLauncher.getProp("heightFile")).intValue();
+	
 
-		BufferedImage theImage = new BufferedImage(1000, 1000, BufferedImage.TYPE_BYTE_GRAY);
-		BufferedImage theImage2 = new BufferedImage(1000, 1000, BufferedImage.TYPE_BYTE_GRAY);
+		BufferedImage theImage = new BufferedImage(widthFile, heightFile, BufferedImage.TYPE_BYTE_GRAY);
+		BufferedImage theImage2 = new BufferedImage(widthFile, heightFile, BufferedImage.TYPE_BYTE_GRAY);
 
 		BufferedImage [] imagesArray = new BufferedImage[2];
 		
@@ -63,15 +69,16 @@ public class ToGray {
 //		}
 
 		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_hh_mm__ss__SSS");
+			SimpleDateFormat sdf = new SimpleDateFormat(AppLauncher.getProp("fileDateFormat") );
 
 			imagenes.add(theImage);
 
+			String extension = AppLauncher.getProp("fileExtension");
 			if (imagenes.size() == 200) {
 				for (int i = 0; i < imagenes.size(); i++) {
-					String fileOutput = "imgs/out" + sdf.format(new Date()) + ".gif";
+					String fileOutput = AppLauncher.getProp("output") + sdf.format(new Date()) + "." + extension;
 					File outputPhoto = new File(fileOutput);
-					ImageIO.write(imagenes.poll(), "gif", outputPhoto);
+					ImageIO.write(imagenes.poll(), extension, outputPhoto);
 				}
 			}
 

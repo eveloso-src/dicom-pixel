@@ -23,12 +23,13 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import laucher.AppLauncher;
 
 @SuppressWarnings("restriction")
 public class WebCamPreviewController implements Initializable {
 
-	public static final double IMAGE_WIDTH = 800;
-	public static final double IMAGE_HEIGTH = 800;
+//	public static final double IMAGE_WIDTH = 800;
+//	public static final double IMAGE_HEIGTH = 800;
 	@FXML
 	Button btnStartCamera;
 	@FXML
@@ -51,6 +52,8 @@ public class WebCamPreviewController implements Initializable {
 	@FXML
 	ImageView imgWebCamCapturedImage3;
 
+	
+	protected TaskCamera task;
 	private BufferedImage grabbedImage;
 
 	private CapturedImage[] arrayImg;
@@ -117,8 +120,8 @@ public class WebCamPreviewController implements Initializable {
 	}
 
 	protected void setImageViewSize() {
-		double height = IMAGE_HEIGTH; // bpWebCamPaneHolder.getHeight();
-		double width = IMAGE_WIDTH; // bpWebCamPaneHolder.getWidth();
+		double height =  Integer.valueOf( AppLauncher.getProp("width")).intValue(); // bpWebCamPaneHolder.getHeight();
+		double width = Integer.valueOf( AppLauncher.getProp("height")).intValue();; // bpWebCamPaneHolder.getWidth();
 		imgWebCamCapturedImage.setFitHeight(height);
 		imgWebCamCapturedImage.setFitWidth(width);
 		imgWebCamCapturedImage.prefHeight(height);
@@ -170,7 +173,7 @@ public class WebCamPreviewController implements Initializable {
 
 
 		stopCamera = false;
-		TaskCamera task = new TaskCamera(stopCamera, grabbedImage, webcamDefault, arrayImg, imageProperty, imageProperty2, imageProperty3);
+		task = new TaskCamera(stopCamera, grabbedImage, webcamDefault, arrayImg, imageProperty, imageProperty2, imageProperty3);
 		Thread th = new Thread(task);
 		labelFPS.textProperty().bind(task.messageProperty());
 		th.setDaemon(true);
@@ -189,12 +192,14 @@ public class WebCamPreviewController implements Initializable {
 
 	public void stopCamera(ActionEvent event) {
 		stopCamera = true;
+		task.stopCamera = true; // funciona este
 		btnStartCamera.setDisable(false);
 		btnStopCamera.setDisable(true);
 	}
 
 	public void startCamera(ActionEvent event) {
 		stopCamera = false;
+		task.stopCamera = false; // funciona este
 		startWebCamStream();
 
 		btnStartCamera.setDisable(true);
@@ -202,19 +207,14 @@ public class WebCamPreviewController implements Initializable {
 
 	}
 
-//	private static final JHGrayFilter GRAY = new JHGrayFilter();
 
-//	public BufferedImage transform(BufferedImage image) {
-//		return GRAY.filter(image, null);
+//	public void disposeCamera(ActionEvent event) {
+//		stopCamera = true;
+//		closeCamera();
+//		Webcam.shutdown();
+//		btnStopCamera.setDisable(true);
+//		btnStartCamera.setDisable(true);
 //	}
-
-	public void disposeCamera(ActionEvent event) {
-		stopCamera = true;
-		closeCamera();
-		Webcam.shutdown();
-		btnStopCamera.setDisable(true);
-		btnStartCamera.setDisable(true);
-	}
 
 	class WebCamInfo {
 		private String webCamName;
