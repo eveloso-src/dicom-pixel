@@ -51,6 +51,9 @@ public class WebCamPreviewController implements Initializable {
 	ImageView imgWebCamCapturedImage2;
 	@FXML
 	ImageView imgWebCamCapturedImage3;
+	
+	@FXML
+	ImageView miniFrame;
 
 	
 	protected TaskCamera task;
@@ -66,6 +69,7 @@ public class WebCamPreviewController implements Initializable {
 	private ObjectProperty<Image> imageProperty = new SimpleObjectProperty<Image>();
 	private ObjectProperty<Image> imageProperty2 = new SimpleObjectProperty<Image>();
 	private ObjectProperty<Image> imageProperty3 = new SimpleObjectProperty<Image>();
+	private ObjectProperty<Image> miniFramePreview = new SimpleObjectProperty<Image>();
 
 	private String cameraListPromptText = "Seleccion Camara";
 
@@ -173,7 +177,7 @@ public class WebCamPreviewController implements Initializable {
 
 
 		stopCamera = false;
-		task = new TaskCamera(stopCamera, grabbedImage, webcamDefault, arrayImg, imageProperty, imageProperty2, imageProperty3);
+		task = new TaskCamera(stopCamera, grabbedImage, webcamDefault, arrayImg, imageProperty, imageProperty2, imageProperty3, miniFramePreview);
 		Thread th = new Thread(task);
 		labelFPS.textProperty().bind(task.messageProperty());
 		th.setDaemon(true);
@@ -181,7 +185,8 @@ public class WebCamPreviewController implements Initializable {
 		imgWebCamCapturedImage.imageProperty().bind(imageProperty);
 		imgWebCamCapturedImage2.imageProperty().bind(imageProperty2);
 		imgWebCamCapturedImage3.imageProperty().bind(imageProperty3);
-
+//		imgWebCamCapturedImage3.imageProperty().bind(miniFramePreview);
+		miniFrame.imageProperty().bind(miniFramePreview);
 	}
 
 	private void closeCamera() {

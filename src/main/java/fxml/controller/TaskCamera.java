@@ -29,16 +29,18 @@ public class TaskCamera extends Task<Void> {
 	ObjectProperty<Image> imageProperty;
 	ObjectProperty<Image> imageProperty2;
 	ObjectProperty<Image> imageProperty3;
+	ObjectProperty<Image> miniFrame;
 
 	public TaskCamera(boolean stopCam, BufferedImage grabbedImage, Webcam webcamDefault, CapturedImage[] arrayImg,
 			ObjectProperty<Image> imageProperty, ObjectProperty<Image> imageProperty2,
-			ObjectProperty<Image> imageProperty3) {
+			ObjectProperty<Image> imageProperty3, ObjectProperty<Image>miniFrame) {
 		this.stopCamera = stopCam;
 		this.grabbedImage = grabbedImage;
 		this.webcamDefault = webcamDefault;
 		this.imageProperty = imageProperty;
 		this.imageProperty2 = imageProperty2;
 		this.imageProperty3 = imageProperty3;
+		this.miniFrame = miniFrame;
 
 		// this.arrayImg = arrayImg;
 
@@ -89,6 +91,7 @@ public class TaskCamera extends Task<Void> {
 
 					if (imagenes.size() == 100) {
 						stopCamera = true;
+						miniFrame.set( SwingFXUtils.toFXImage(imagenes.poll(),null));
 					}
 				}
 			} catch (Exception e) {
@@ -104,6 +107,7 @@ public class TaskCamera extends Task<Void> {
 				imageProperty.set(SwingFXUtils.toFXImage(frame, null));
 				imageProperty2.set(SwingFXUtils.toFXImage(frame, null));
 				imageProperty3.set(SwingFXUtils.toFXImage(frame, null));
+				
 			}
 		}
 
