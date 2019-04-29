@@ -10,14 +10,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.github.sarxos.webcam.Webcam;
-
+import javafx.scene.control.ProgressBar;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import javafx.scene.control.Slider;
 
 public class TaskCamera extends Task<Void> {
 
+	BufferedImage[] listImg;
 	public boolean stopCamera = false;
 	BufferedImage grabbedImage;
 	Webcam webcamDefault;
@@ -30,10 +34,12 @@ public class TaskCamera extends Task<Void> {
 	ObjectProperty<Image> imageProperty2;
 	ObjectProperty<Image> imageProperty3;
 	ObjectProperty<Image> miniFrame;
+	private WebCamPreviewController webCamPreviewController;
 
 	public TaskCamera(boolean stopCam, BufferedImage grabbedImage, Webcam webcamDefault, CapturedImage[] arrayImg,
 			ObjectProperty<Image> imageProperty, ObjectProperty<Image> imageProperty2,
-			ObjectProperty<Image> imageProperty3, ObjectProperty<Image>miniFrame) {
+			ObjectProperty<Image> imageProperty3, ObjectProperty<Image> miniFrame,
+			WebCamPreviewController webCamPreviewController) {
 		this.stopCamera = stopCam;
 		this.grabbedImage = grabbedImage;
 		this.webcamDefault = webcamDefault;
@@ -41,7 +47,7 @@ public class TaskCamera extends Task<Void> {
 		this.imageProperty2 = imageProperty2;
 		this.imageProperty3 = imageProperty3;
 		this.miniFrame = miniFrame;
-
+		this.webCamPreviewController = webCamPreviewController;
 		// this.arrayImg = arrayImg;
 
 	}
@@ -89,29 +95,25 @@ public class TaskCamera extends Task<Void> {
 						}
 					});
 
-					if (imagenes.size() == 100) {
+					if (imagenes.size() == 60) {
 						stopCamera = true;
-						miniFrame.set( SwingFXUtils.toFXImage(imagenes.poll(),null));
+						this.webCamPreviewController.stopCamera(null);
+						// this.webCamPreviewController.btnStopCamera.setDisable(false);
+						miniFrame.set(SwingFXUtils.toFXImage(imagenes.poll(), null));
 					}
 				}
 			} catch (Exception e) {
 			}
 		}
-		
-		BufferedImage frame;
-		// play images
-		while (stopCamera) {
-			Iterator<BufferedImage> it = imagenes.iterator();
-			while(it.hasNext()) {
-				frame = it.next();
-				imageProperty.set(SwingFXUtils.toFXImage(frame, null));
-				imageProperty2.set(SwingFXUtils.toFXImage(frame, null));
-				imageProperty3.set(SwingFXUtils.toFXImage(frame, null));
-				
-			}
-		}
 
+		webCamPreviewController.createSlider(imagenes);
+		
 		// TaskCamera.saveImages(imagenes);
+		return null;
+	}
+
+	protected Image getImageNum(Number new_val) {
+		SwingFXUtils.toFXImage(listImg[new_val.intValue()], null);
 		return null;
 	}
 
