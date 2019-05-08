@@ -8,17 +8,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.embed.swing.SwingFXUtils;
+
 import com.github.sarxos.webcam.Webcam;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -58,10 +60,14 @@ public class WebCamPreviewController implements Initializable {
 	ImageView imgWebCamCapturedImage3;
 
 	@FXML
+	javafx.scene.control.ComboBox<String> speed;
+
+	@FXML
 	ImageView miniFrame;
 	@FXML
 	public Slider sliderFrame;
 
+	protected ThreadSlider tslider;
 	protected TaskCamera task;
 	private BufferedImage grabbedImage;
 
@@ -124,6 +130,43 @@ public class WebCamPreviewController implements Initializable {
 			}
 		});
 
+		List<String> obsList = new ArrayList<>();
+		obsList.add("15 FPS");
+		obsList.add("30 FPS");
+		obsList.add("45 FPS");
+		ObservableList<String> observableList = FXCollections.observableArrayList(obsList);
+		// obsListq = (SimpleListProperty<String>)
+		// FXCollections.observableList(obsList);
+		// list.itemsProperty().bindBidirectional(new SimpleListProperty<>(listItems));
+
+		speed.setItems(observableList);
+//		speed.selectionModelProperty().setValue("31 FPS");
+		speed.getSelectionModel().select(1);
+
+		speed.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+
+		
+
+			@Override
+			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
+//				System.out.println("arg0 " + arg0);
+//				System.out.println("arg1 " + arg1);
+				System.out.println("arg2 " + arg2);
+				
+				if (arg2!=null && arg2.equals("30 FPS")) {
+					tslider.fps = 30;		
+				}
+				else if (arg2!=null && arg2.equals("15 FPS")) {
+					tslider.fps = 70;
+				}
+				else {
+					tslider.fps = 1;
+				}
+				
+			}
+		});
+
+		
 	}
 
 	protected void setImageViewSize() {
@@ -136,16 +179,16 @@ public class WebCamPreviewController implements Initializable {
 		imgWebCamCapturedImage.prefWidth(width);
 		imgWebCamCapturedImage.setPreserveRatio(true);
 
-		imgWebCamCapturedImage2.setFitHeight(height);
-		imgWebCamCapturedImage2.setFitWidth(width);
-		imgWebCamCapturedImage2.prefHeight(height);
-		imgWebCamCapturedImage2.prefWidth(width);
+		imgWebCamCapturedImage2.setFitHeight(height / 4);
+		imgWebCamCapturedImage2.setFitWidth(width / 4);
+		imgWebCamCapturedImage2.prefHeight(height / 4);
+		imgWebCamCapturedImage2.prefWidth(width / 4);
 		imgWebCamCapturedImage2.setPreserveRatio(true);
 
-		imgWebCamCapturedImage3.setFitHeight(height / 2);
-		imgWebCamCapturedImage3.setFitWidth(width / 2);
-		imgWebCamCapturedImage3.prefHeight(height / 2);
-		imgWebCamCapturedImage3.prefWidth(width / 2);
+		imgWebCamCapturedImage3.setFitHeight(height / 4);
+		imgWebCamCapturedImage3.setFitWidth(width / 4);
+		imgWebCamCapturedImage3.prefHeight(height / 4);
+		imgWebCamCapturedImage3.prefWidth(width / 4);
 		imgWebCamCapturedImage3.setPreserveRatio(true);
 
 	}
@@ -261,44 +304,74 @@ public class WebCamPreviewController implements Initializable {
 			lBuffered[i] = (it.next());
 			i++;
 		}
-		 final BufferedImage[] listImg = lBuffered;
+		final BufferedImage[] listImg = lBuffered;
+		Platform.setImplicitExit(false);
 		sliderFrame.setMax(imagenes.size());
 		sliderFrame.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
 				imageProperty.set(SwingFXUtils.toFXImage(listImg[new_val.intValue()], null));
-//				System.out.println(new_val);
-//				sliderFrame.setValue(new_val.intValue());
-//				sliderFrame.increment();
+				// System.out.println(new_val);
+				// sliderFrame.setValue(new_val.intValue());
+				// sliderFrame.increment();
+			}
+		});
+
+		sliderFrame.valueChangingProperty().addListener((obs, oldVal, newVal) -> {
+			if (!newVal) {
+				double value = sliderFrame.getValue();
+//				System.out.println("value " + value);
+//				System.out.println("oldVal " + oldVal);
+//				System.out.println("obs " + obs);
+				sliderFrame.adjustValue(value);
+			}
+			
+		}
+
+		);
+
+		sliderFrame.setOnMouseClicked((event) -> {
+			// tslider.cancel();
+			TaskCamera.autoPlay = !TaskCamera.autoPlay;
+			if (TaskCamera.autoPlay) {
+				tslider = new ThreadSlider(sliderFrame);
+				// tslider.call();
 			}
 		});
 
 		BufferedImage frame;
 		int contProgress = 0;
 		int totalImg = imagenes.size();
-		ThreadSlider tslider = new ThreadSlider(sliderFrame);
-		try {
-			tslider.call();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-//		while (stopCamera) {
-//			Iterator<BufferedImage> it1 = imagenes.iterator();
-//
-//			
-//			while (it1.hasNext() && stopCamera) {
-//				frame = it1.next();
-//				imageProperty.set(SwingFXUtils.toFXImage(frame, null));
-//				imageProperty2.set(SwingFXUtils.toFXImage(frame, null));
-//				imageProperty3.set(SwingFXUtils.toFXImage(frame, null));
-//				contProgress++;
-//				if (contProgress == totalImg) {
-//					contProgress = 0;
-//				}
-//
+//		Platform.runLater(new Runnable(){
+//			@Override
+//			public void run() {
+				
+				tslider = new ThreadSlider(sliderFrame);
+				try {
+					tslider.call();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 //			}
-//		}
+			
+//		});
+
+		// while (stopCamera) {
+		// Iterator<BufferedImage> it1 = imagenes.iterator();
+		//
+		//
+		// while (it1.hasNext() && stopCamera) {
+		// frame = it1.next();
+		// imageProperty.set(SwingFXUtils.toFXImage(frame, null));
+		// imageProperty2.set(SwingFXUtils.toFXImage(frame, null));
+		// imageProperty3.set(SwingFXUtils.toFXImage(frame, null));
+		// contProgress++;
+		// if (contProgress == totalImg) {
+		// contProgress = 0;
+		// }
+		//
+		// }
+		// }
 
 	}
 

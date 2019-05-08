@@ -102,15 +102,24 @@
    <center>
       <SplitPane dividerPositions="0.8910306845003935" orientation="VERTICAL" prefHeight="466.0" prefWidth="1410.0" BorderPane.alignment="CENTER">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="463.0" prefWidth="1196.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="463.0" prefWidth="1425.0">
                <children>
-                  <HBox layoutX="42.0" layoutY="100.0" prefHeight="100.0" prefWidth="200.0">
+                  <HBox layoutX="42.0" layoutY="100.0" prefHeight="100.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="509.0" prefWidth="250.0">
                      <children>
-                        <ImageView fx:id="imgWebCamCapturedImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                        <ImageView fx:id="imgWebCamCapturedImage3" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                        <ImageView fx:id="imgWebCamCapturedImage2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <SplitPane layoutX="-26.0" layoutY="-43.0" orientation="VERTICAL" prefHeight="551.0" prefWidth="250.0">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="432.0" prefWidth="158.0">
+                                 <children>
+                                    <ImageView fx:id="imgWebCamCapturedImage2" fitHeight="193.0" fitWidth="214.0" layoutX="27.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="imgWebCamCapturedImage3" fitHeight="215.0" fitWidth="220.0" layoutX="27.0" layoutY="258.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </AnchorPane>
+                          </items>
+                        </SplitPane>
                      </children>
-                  </HBox>
+                  </AnchorPane>
+                  <ImageView fx:id="imgWebCamCapturedImage" fitHeight="359.0" fitWidth="516.0" layoutX="414.0" layoutY="59.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="47.0" prefWidth="1644.0">
@@ -122,28 +131,15 @@
                               <Insets left="100.0" right="100.0" top="5.0" />
                            </HBox.margin>
                         </Slider>
-                        <Slider prefHeight="14.0" prefWidth="300.0" HBox.hgrow="SOMETIMES">
-                           <HBox.margin>
-                              <Insets left="100.0" right="100.0" top="5.0" />
-                           </HBox.margin>
-                        </Slider>
-                        <Slider prefHeight="14.0" prefWidth="300.0">
-                           <HBox.margin>
-                              <Insets left="100.0" right="100.0" top="5.0" />
-                           </HBox.margin>
-                        </Slider>
                      </children>
                   </HBox>
+                  <ComboBox fx:id="speed" layoutX="94.0" layoutY="1.0" prefWidth="150.0" />
                </children>
             </AnchorPane>
         </items>
       </SplitPane>
    </center>
    <left>
-      <SplitPane orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
-        <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="188.0" prefWidth="158.0" />
-        </items>
-      </SplitPane>
+      <SplitPane orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER" />
    </left>
 </BorderPane>
