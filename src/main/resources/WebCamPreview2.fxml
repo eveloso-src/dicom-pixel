@@ -5,12 +5,13 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
@@ -94,36 +95,29 @@
       </rowConstraints>
     </GridPane>
   </top>
+   <right>
+      <ImageView fx:id="imgWebCamCapturedImage2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+   </right>
+   <left>
+      <ImageView fx:id="imgWebCamCapturedImage3" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+   </left>
    <bottom>
       <FlowPane prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </bottom>
    <center>
-      <Pane BorderPane.alignment="CENTER">
-         <children>
-            <GridPane layoutX="35.0" layoutY="78.0" prefHeight="418.0" prefWidth="845.0">
-               <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="84.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="525.0" minWidth="10.0" prefWidth="525.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-               </columnConstraints>
-               <rowConstraints>
-                  <RowConstraints maxHeight="181.0" minHeight="10.0" prefHeight="181.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="181.0" minHeight="10.0" prefHeight="181.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="175.0" minHeight="10.0" prefHeight="102.0" vgrow="SOMETIMES" />
-               </rowConstraints>
+      <SplitPane dividerPositions="0.9157688540646426" orientation="VERTICAL" prefHeight="466.0" prefWidth="1410.0" BorderPane.alignment="CENTER">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <FlowPane GridPane.rowIndex="2">
-                     <children>
-                        <Slider fx:id="sliderFrame" blockIncrement="1.0" majorTickUnit="100.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
-                        <ComboBox fx:id="comboSpeed" prefWidth="150.0" />
-                     </children>
-                  </FlowPane>
-                  <ImageView fx:id="imgWebCamCapturedImage3" fitHeight="131.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                  <ImageView fx:id="imgWebCamCapturedImage" fitHeight="115.0" fitWidth="133.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowSpan="2" />
-                  <ImageView fx:id="imgWebCamCapturedImage2" fitHeight="152.0" fitWidth="166.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="imgWebCamCapturedImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                </children>
-            </GridPane>
-         </children>
-      </Pane>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="86.0" prefWidth="1408.0">
+               <children>
+                  <Slider fx:id="sliderFrame" blockIncrement="1.0" layoutX="25.0" layoutY="10.0" majorTickUnit="100.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
    </center>
 </BorderPane>

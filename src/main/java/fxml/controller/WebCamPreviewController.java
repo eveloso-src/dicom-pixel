@@ -1,14 +1,16 @@
 package fxml.controller;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.ResourceBundle;
-import javafx.embed.swing.SwingFXUtils;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
 import com.github.sarxos.webcam.Webcam;
 
 import javafx.application.Platform;
@@ -19,6 +21,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -49,8 +52,12 @@ public class WebCamPreviewController implements Initializable {
 	// FlowPane fpBottomPane;
 	@FXML
 	ImageView imgWebCamCapturedImage;
+
 	@FXML
 	javafx.scene.control.Label labelFPS;
+
+	@FXML
+	javafx.scene.control.ComboBox<String> comboSpeed;
 
 	@FXML
 	ImageView imgWebCamCapturedImage2;
@@ -62,12 +69,14 @@ public class WebCamPreviewController implements Initializable {
 	@FXML
 	public Slider sliderFrame;
 
-	protected TaskCamera task;
+	public TaskCamera task;
 	private BufferedImage grabbedImage;
 
 	private CapturedImage[] arrayImg;
 	// private WebcamPanel selWebCamPanel = null;
 	private Webcam selWebCam = null;
+	
+	private ThreadSlider tslider;
 
 	private Webcam webcamDefault = Webcam.getDefault();
 
@@ -78,6 +87,7 @@ public class WebCamPreviewController implements Initializable {
 	private ObjectProperty<Image> miniFramePreview = new SimpleObjectProperty<Image>();
 
 	private String cameraListPromptText = "Seleccion Camara";
+	public long speed = 30;
 
 	public javafx.scene.control.Label getLabelFPS() {
 		return labelFPS;
@@ -89,6 +99,11 @@ public class WebCamPreviewController implements Initializable {
 
 	// @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+
+		comboSpeed.getItems().add("15 FPS");
+		comboSpeed.getItems().add("30 FPS");
+		comboSpeed.getItems().add("45 FPS");
+		comboSpeed.getSelectionModel().select(1);
 
 		// fpBottomPane.setDisable(true);
 		ObservableList<WebCamInfo> options = FXCollections.observableArrayList();
@@ -117,6 +132,23 @@ public class WebCamPreviewController implements Initializable {
 			}
 		});
 
+		comboSpeed.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (newValue.equals("15 FPS")) {
+					comboSpeed.getSelectionModel().select(0);
+					speed = 60;
+				} else if (newValue.equals("45 FPS")) {
+					comboSpeed.getSelectionModel().select(2);
+					speed = 15;
+				} else {
+					comboSpeed.getSelectionModel().select(1);
+					speed = 30;
+				}
+
+			}
+		});
+
+		comboSpeed.getSelectionModel().select(1);
 		Platform.runLater(new Runnable() {
 			// @Override
 			public void run() {
@@ -130,23 +162,29 @@ public class WebCamPreviewController implements Initializable {
 		double height = Integer.valueOf(AppLauncher.getProp("width")).intValue(); // bpWebCamPaneHolder.getHeight();
 		double width = Integer.valueOf(AppLauncher.getProp("height")).intValue();
 		; // bpWebCamPaneHolder.getWidth();
-		imgWebCamCapturedImage.setFitHeight(height);
-		imgWebCamCapturedImage.setFitWidth(width);
-		imgWebCamCapturedImage.prefHeight(height);
-		imgWebCamCapturedImage.prefWidth(width);
+		imgWebCamCapturedImage.setFitHeight(height / 3);
+		imgWebCamCapturedImage.setFitWidth(width / 3);
+		imgWebCamCapturedImage.prefHeight(height / 3);
+		imgWebCamCapturedImage.prefWidth(width / 3);
 		imgWebCamCapturedImage.setPreserveRatio(true);
 
-		imgWebCamCapturedImage2.setFitHeight(height);
-		imgWebCamCapturedImage2.setFitWidth(width);
-		imgWebCamCapturedImage2.prefHeight(height);
-		imgWebCamCapturedImage2.prefWidth(width);
+		imgWebCamCapturedImage2.setFitHeight(height / 5);
+		imgWebCamCapturedImage2.setFitWidth(width / 5);
+		imgWebCamCapturedImage2.prefHeight(height / 5);
+		imgWebCamCapturedImage2.prefWidth(width / 5);
 		imgWebCamCapturedImage2.setPreserveRatio(true);
 
-		imgWebCamCapturedImage3.setFitHeight(height / 2);
-		imgWebCamCapturedImage3.setFitWidth(width / 2);
-		imgWebCamCapturedImage3.prefHeight(height / 2);
-		imgWebCamCapturedImage3.prefWidth(width / 2);
+		imgWebCamCapturedImage3.setFitHeight(height / 5);
+		imgWebCamCapturedImage3.setFitWidth(width / 5);
+		imgWebCamCapturedImage3.prefHeight(height / 5);
+		imgWebCamCapturedImage3.prefWidth(width / 5);
 		imgWebCamCapturedImage3.setPreserveRatio(true);
+
+//		JFrame video1 = new JFrame("Vent");
+//		video1.setSize(600, 600);
+//		JPanel jpane = new JPanel();
+//		jpane.add(imgWebCamCapturedImag);
+//		video1.add(jpane);
 
 	}
 
@@ -181,7 +219,7 @@ public class WebCamPreviewController implements Initializable {
 
 		stopCamera = false;
 		task = new TaskCamera(stopCamera, grabbedImage, webcamDefault, arrayImg, imageProperty, imageProperty2,
-				imageProperty3, miniFramePreview, this);
+				imageProperty3, imageProperty3, miniFramePreview, this);
 		Thread th = new Thread(task);
 		labelFPS.textProperty().bind(task.messageProperty());
 		th.setDaemon(true);
@@ -189,6 +227,7 @@ public class WebCamPreviewController implements Initializable {
 		imgWebCamCapturedImage.imageProperty().bind(imageProperty);
 		imgWebCamCapturedImage2.imageProperty().bind(imageProperty2);
 		imgWebCamCapturedImage3.imageProperty().bind(imageProperty3);
+//		video1.imageProperty().bind(imageProperty3);
 		// imgWebCamCapturedImage3.imageProperty().bind(miniFramePreview);
 		miniFrame.imageProperty().bind(miniFramePreview);
 	}
@@ -200,15 +239,16 @@ public class WebCamPreviewController implements Initializable {
 	}
 
 	public void stopCamera(ActionEvent event) {
-		stopCamera = true;
+//		stopCamera = true;
 		task.stopCamera = true; // funciona este
 		btnStartCamera.setDisable(false);
 		btnStopCamera.setDisable(true);
 	}
 
 	public void startCamera(ActionEvent event) {
-		stopCamera = false;
+//		stopCamera = false;
 		task.stopCamera = false; // funciona este
+		tslider.cancel();
 		startWebCamStream();
 
 		btnStartCamera.setDisable(true);
@@ -261,7 +301,7 @@ public class WebCamPreviewController implements Initializable {
 			lBuffered[i] = (it.next());
 			i++;
 		}
-		 final BufferedImage[] listImg = lBuffered;
+		final BufferedImage[] listImg = lBuffered;
 		sliderFrame.setMax(imagenes.size());
 		sliderFrame.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
@@ -275,14 +315,15 @@ public class WebCamPreviewController implements Initializable {
 		BufferedImage frame;
 		int contProgress = 0;
 		int totalImg = imagenes.size();
-		ThreadSlider tslider = new ThreadSlider(sliderFrame);
+		tslider = new ThreadSlider(sliderFrame, this);
 		try {
+
 			tslider.call();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 //		while (stopCamera) {
 //			Iterator<BufferedImage> it1 = imagenes.iterator();
 //
@@ -300,6 +341,11 @@ public class WebCamPreviewController implements Initializable {
 //			}
 //		}
 
+	}
+
+	public long getSpeed() {
+		// TODO Auto-generated method stub
+		return speed;
 	}
 
 }

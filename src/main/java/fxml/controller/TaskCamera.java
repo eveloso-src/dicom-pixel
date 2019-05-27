@@ -33,12 +33,13 @@ public class TaskCamera extends Task<Void> {
 	ObjectProperty<Image> imageProperty;
 	ObjectProperty<Image> imageProperty2;
 	ObjectProperty<Image> imageProperty3;
+	ObjectProperty<Image> imageProperty4;
 	ObjectProperty<Image> miniFrame;
 	private WebCamPreviewController webCamPreviewController;
 
 	public TaskCamera(boolean stopCam, BufferedImage grabbedImage, Webcam webcamDefault, CapturedImage[] arrayImg,
 			ObjectProperty<Image> imageProperty, ObjectProperty<Image> imageProperty2,
-			ObjectProperty<Image> imageProperty3, ObjectProperty<Image> miniFrame,
+			ObjectProperty<Image> imageProperty3, ObjectProperty<Image> imageProperty4, ObjectProperty<Image> miniFrame,
 			WebCamPreviewController webCamPreviewController) {
 		this.stopCamera = stopCam;
 		this.grabbedImage = grabbedImage;
@@ -46,6 +47,7 @@ public class TaskCamera extends Task<Void> {
 		this.imageProperty = imageProperty;
 		this.imageProperty2 = imageProperty2;
 		this.imageProperty3 = imageProperty3;
+		this.imageProperty4 = imageProperty4;
 		this.miniFrame = miniFrame;
 		this.webCamPreviewController = webCamPreviewController;
 		// this.arrayImg = arrayImg;
@@ -89,9 +91,11 @@ public class TaskCamera extends Task<Void> {
 							final Image mainiamge = SwingFXUtils.toFXImage(grabbedImage, null);
 							final Image mainiamge2 = SwingFXUtils.toFXImage(bwImage, null);
 							final Image mainiamge3 = SwingFXUtils.toFXImage(bwImage2, null);
+							final Image mainiamge4 = SwingFXUtils.toFXImage(bwImage2, null);
 							imageProperty.set(mainiamge);
 							imageProperty2.set(mainiamge2);
 							imageProperty3.set(mainiamge3);
+							imageProperty4.set(mainiamge4);
 						}
 					});
 
@@ -107,7 +111,7 @@ public class TaskCamera extends Task<Void> {
 		}
 
 		webCamPreviewController.createSlider(imagenes);
-		
+
 		// TaskCamera.saveImages(imagenes);
 		return null;
 	}

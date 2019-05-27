@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import fxml.controller.WebCamPreviewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,12 +13,21 @@ import javafx.stage.Stage;
 
 public class AppLauncher extends Application {
 
+	@SuppressWarnings("restriction")
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(Stage primaryStage) throws IOException {
 
+		@SuppressWarnings("restriction")
 		Parent root = null;
+		FXMLLoader load = null;
 		try {
 			root = FXMLLoader.load(getClass().getResource("/fxml/gui/WebCamPreview2.fxml"));
+			
+			load  = new FXMLLoader();
+			load.setLocation(getClass().getResource("/fxml/gui/window.fxml"));
+			
+			   
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -33,6 +41,19 @@ public class AppLauncher extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.centerOnScreen();
 		primaryStage.show();
+		
+		Stage stage = new Stage();
+        stage.setTitle("Monitor 1");
+        stage.setScene(new Scene(load.load(), 450, 450));
+        stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+//	    stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
+        stage.show();
+
+        
+        // Hide this current window (if this is what you want)
+//        ((Node)(event.getSource())).getScene().getWindow().hide();
+    
+
 	}
 
 	public static String getProp(String propName) {
