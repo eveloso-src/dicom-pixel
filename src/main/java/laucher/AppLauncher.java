@@ -19,12 +19,9 @@ public class AppLauncher extends Application {
 
 		@SuppressWarnings("restriction")
 		Parent root = null;
-		FXMLLoader load = null;
 		try {
 			root = FXMLLoader.load(getClass().getResource("/fxml/gui/WebCamPreview2.fxml"));
 			
-			load  = new FXMLLoader();
-			load.setLocation(getClass().getResource("/fxml/gui/window.fxml"));
 			
 			   
 
@@ -42,13 +39,6 @@ public class AppLauncher extends Application {
 		primaryStage.centerOnScreen();
 		primaryStage.show();
 		
-		Stage stage = new Stage();
-        stage.setTitle("Monitor 1");
-        stage.setScene(new Scene(load.load(), 450, 450));
-        stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-//	    stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
-        stage.show();
-
         
         // Hide this current window (if this is what you want)
 //        ((Node)(event.getSource())).getScene().getWindow().hide();

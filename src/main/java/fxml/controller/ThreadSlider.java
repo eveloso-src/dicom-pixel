@@ -20,8 +20,7 @@ public class ThreadSlider extends Task<Void> {
 	// throws Exception
 	{
 		double nextVal = 0;
-		while (true 
-				&& controller.task.stopCamera
+		while ( controller.task.stopCamera
 				&& !controller.btnStartCamera.isDisable()
 				) {
 

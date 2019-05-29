@@ -3,6 +3,7 @@ package fxml.controller;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.Iterator;
@@ -24,13 +25,16 @@ import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import laucher.AppLauncher;
 
 @SuppressWarnings("restriction")
@@ -63,11 +67,15 @@ public class WebCamPreviewController implements Initializable {
 	ImageView imgWebCamCapturedImage2;
 	@FXML
 	ImageView imgWebCamCapturedImage3;
+	@FXML
+	ImageView video1;
 
 	@FXML
 	ImageView miniFrame;
 	@FXML
 	public Slider sliderFrame;
+	
+	ImageView duplicatedCam;
 
 	public TaskCamera task;
 	private BufferedImage grabbedImage;
@@ -168,6 +176,14 @@ public class WebCamPreviewController implements Initializable {
 		imgWebCamCapturedImage.prefWidth(width / 3);
 		imgWebCamCapturedImage.setPreserveRatio(true);
 
+		duplicatedCam = imgWebCamCapturedImage3;
+		
+//		video1.setFitHeight(height / 3);
+//		video1.setFitWidth(width / 3);
+//		video1.prefHeight(height / 3);
+//		video1.prefWidth(width / 3);
+//		video1.setPreserveRatio(true);
+
 		imgWebCamCapturedImage2.setFitHeight(height / 5);
 		imgWebCamCapturedImage2.setFitWidth(width / 5);
 		imgWebCamCapturedImage2.prefHeight(height / 5);
@@ -213,6 +229,42 @@ public class WebCamPreviewController implements Initializable {
 		new Thread(webCamIntilizer).start();
 		// fpBottomPane.setDisable(false);
 		btnStartCamera.setDisable(true);
+		
+		FXMLLoader load  = new FXMLLoader();
+		FXMLLoader load2  = new FXMLLoader();
+		
+		load.setLocation(getClass().getResource("/fxml/gui/window.fxml"));
+		load2.setLocation(getClass().getResource("/fxml/gui/window.fxml"));
+
+		Stage stage = new Stage();
+        stage.setTitle("Monitor 1");
+//        try {
+//        	javafx.scene.Parent windowLoad = load.load();
+        	 javafx.scene.layout.StackPane secondaryLayout = new javafx.scene.layout.StackPane();
+             secondaryLayout.getChildren().add(imgWebCamCapturedImage2);
+			stage.setScene(new Scene(secondaryLayout, 450, 450));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+        stage.initModality(javafx.stage.Modality.NONE);
+//	    stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
+        stage.show();
+
+        
+		Stage stage2 = new Stage();
+        stage2.setTitle("Monitor 2");
+//        try {
+//        	javafx.scene.Parent windowLoad = load.load();
+        	 javafx.scene.layout.StackPane secondaryLayout2 = new javafx.scene.layout.StackPane();
+             secondaryLayout2.getChildren().add(imgWebCamCapturedImage3);
+			stage2.setScene(new Scene(secondaryLayout2, 450, 450));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+        stage2.initModality(javafx.stage.Modality.NONE);
+//	    stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
+        stage2.show();
+
 	}
 
 	protected void startWebCamStream() {
@@ -227,7 +279,7 @@ public class WebCamPreviewController implements Initializable {
 		imgWebCamCapturedImage.imageProperty().bind(imageProperty);
 		imgWebCamCapturedImage2.imageProperty().bind(imageProperty2);
 		imgWebCamCapturedImage3.imageProperty().bind(imageProperty3);
-//		video1.imageProperty().bind(imageProperty3);
+//		duplicatedCam.imageProperty().bind(imageProperty3);
 		// imgWebCamCapturedImage3.imageProperty().bind(miniFramePreview);
 		miniFrame.imageProperty().bind(miniFramePreview);
 	}
