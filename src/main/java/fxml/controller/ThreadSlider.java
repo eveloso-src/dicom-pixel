@@ -15,7 +15,7 @@ public class ThreadSlider extends Task<Void> {
 		this.slider = sliderFrame;
 		this.controller = controller;
 		slider.setShowTickLabels(false);
-		slider.setShowTickMarks(false);
+		//slider.setShowTickMarks(false);
 		slider.setMajorTickUnit(1);
 		slider.setMinorTickCount(1);
 		slider.setBlockIncrement(1);

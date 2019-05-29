@@ -6,7 +6,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import com.github.sarxos.webcam.Webcam;
@@ -71,25 +73,24 @@ public class WebCamPreviewController implements Initializable {
 	ImageView video1;
 
 	@FXML
-	javafx.scene.control.ComboBox<String> speed;
-
-	@FXML
 	ImageView miniFrame;
 	@FXML
 	public Slider sliderFrame;
 	
+	public int speed;
+	
+	public ThreadSlider tslider;
+	
+	public TaskCamera task;
+	
 	ImageView duplicatedCam;
 
-	protected ThreadSlider tslider;
-	protected TaskCamera task;
 	private BufferedImage grabbedImage;
 
 	private CapturedImage[] arrayImg;
 	// private WebcamPanel selWebCamPanel = null;
 	private Webcam selWebCam = null;
 	
-	private ThreadSlider tslider;
-
 	private Webcam webcamDefault = Webcam.getDefault();
 
 	private boolean stopCamera = false;
@@ -99,7 +100,6 @@ public class WebCamPreviewController implements Initializable {
 	private ObjectProperty<Image> miniFramePreview = new SimpleObjectProperty<Image>();
 
 	private String cameraListPromptText = "Seleccion Camara";
-	public long speed = 30;
 
 	public javafx.scene.control.Label getLabelFPS() {
 		return labelFPS;
@@ -177,28 +177,25 @@ public class WebCamPreviewController implements Initializable {
 		// FXCollections.observableList(obsList);
 		// list.itemsProperty().bindBidirectional(new SimpleListProperty<>(listItems));
 
-		speed.setItems(observableList);
+		comboSpeed.setItems(observableList);
 //		speed.selectionModelProperty().setValue("31 FPS");
-		speed.getSelectionModel().select(1);
+		comboSpeed.getSelectionModel().select(1);
 
-		speed.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+		comboSpeed.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 
 		
 
 			@Override
 			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
-//				System.out.println("arg0 " + arg0);
-//				System.out.println("arg1 " + arg1);
-				System.out.println("arg2 " + arg2);
 				
 				if (arg2!=null && arg2.equals("30 FPS")) {
 					tslider.fps = 30;		
 				}
 				else if (arg2!=null && arg2.equals("15 FPS")) {
-					tslider.fps = 70;
+					tslider.fps = 60;
 				}
 				else {
-					tslider.fps = 1;
+					tslider.fps = 15;
 				}
 				
 			}
@@ -424,7 +421,7 @@ public class WebCamPreviewController implements Initializable {
 			// tslider.cancel();
 			TaskCamera.autoPlay = !TaskCamera.autoPlay;
 			if (TaskCamera.autoPlay) {
-				tslider = new ThreadSlider(sliderFrame);
+				tslider = new ThreadSlider(sliderFrame, this);
 				// tslider.call();
 			}
 		});

@@ -98,7 +98,7 @@
       <FlowPane prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </bottom>
    <center>
-   <Pane BorderPane.alignment="CENTER">
+      <Pane BorderPane.alignment="CENTER">
          <children>
             <GridPane layoutX="35.0" layoutY="78.0" prefHeight="418.0" prefWidth="845.0">
                <columnConstraints>
@@ -127,7 +127,4 @@
          </children>
       </Pane>
    </center>
-   <left>
-      <SplitPane orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER" />
-   </left>
 </BorderPane>
