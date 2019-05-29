@@ -5,22 +5,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.github.sarxos.webcam.Webcam;
-import javafx.scene.control.ProgressBar;
+
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
-import javafx.scene.control.Slider;
 
 public class TaskCamera extends Task<Void> {
 
+	public static boolean autoPlay = true;
 	BufferedImage[] listImg;
 	public boolean stopCamera = false;
 	BufferedImage grabbedImage;
@@ -69,17 +66,27 @@ public class TaskCamera extends Task<Void> {
 		SimpleDateFormat ssdf = new SimpleDateFormat("ss");
 		Calendar inicio, fin;
 		double value;
+		int contadorFPS = 0;
+		long [] promedio = new long[800];
+		inicio = Calendar.getInstance();
 		while (!stopCamera) {
 			try {
+//				System.out.println("Fps: " + webcamDefault.getFPS());
+//				ByteBuffer bytes = webcamDefault.getImageBytes();
+				
 				if ((grabbedImage = webcamDefault.getImage()) != null) {
-					inicio = Calendar.getInstance();
 					arrayImg = tg.convertBufferedImage(grabbedImage, imagenes);
 					fin = Calendar.getInstance();
+//					System.out.println(" " + ((fin.getTimeInMillis() - inicio.getTimeInMillis())));
+//					promedio[contadorFPS] = inicio.getTimeInMillis() - fin.getTimeInMillis();
 					if (!ssdf.format(new Date()).equals(segundo)) {
+//						System.out.println("limpiar " + imagenes.size());
 						segundo = ssdf.format(new Date());
-						value = ((double) 1 / (fin.getTimeInMillis() - inicio.getTimeInMillis()) * 1000);
-						updateMessage(String.valueOf(value).substring(0, String.valueOf(value).indexOf(".")));
+//						value = ((double) 1 / (fin.getTimeInMillis() - inicio.getTimeInMillis()) * 1000);
+//						updateMessage(String.valueOf(value).substring(0, String.valueOf(value).indexOf(".")));
+						updateMessage(String.valueOf(webcamDefault.getFPS()).substring(0, String.valueOf(webcamDefault.getFPS()).indexOf(".")));
 						inicio = fin;
+//						contadorFPS++;
 					}
 
 					bwImage = arrayImg[0];
@@ -106,10 +113,14 @@ public class TaskCamera extends Task<Void> {
 						miniFrame.set(SwingFXUtils.toFXImage(imagenes.poll(), null));
 					}
 				}
+				else {
+					System.out.println("false");
+				}
 			} catch (Exception e) {
 			}
 		}
 
+		autoPlay = true;
 		webCamPreviewController.createSlider(imagenes);
 
 		// TaskCamera.saveImages(imagenes);
