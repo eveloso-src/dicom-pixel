@@ -68,6 +68,8 @@ public class WebCamPreviewController implements Initializable {
 	@FXML
 	ImageView imgWebCamCapturedImage3;
 	@FXML
+	ImageView imgWebCamCapturedImage0;
+	@FXML
 	ImageView video1;
 
 	@FXML
@@ -176,13 +178,20 @@ public class WebCamPreviewController implements Initializable {
 		imgWebCamCapturedImage.prefWidth(width / 3);
 		imgWebCamCapturedImage.setPreserveRatio(true);
 
-		duplicatedCam = imgWebCamCapturedImage3;
+//		duplicatedCam = imgWebCamCapturedImage3;
 		
 //		video1.setFitHeight(height / 3);
 //		video1.setFitWidth(width / 3);
 //		video1.prefHeight(height / 3);
 //		video1.prefWidth(width / 3);
 //		video1.setPreserveRatio(true);
+
+		imgWebCamCapturedImage0.setFitHeight(height / 5);
+		imgWebCamCapturedImage0.setFitWidth(width / 5);
+		imgWebCamCapturedImage0.prefHeight(height / 5);
+		imgWebCamCapturedImage0.prefWidth(width / 5);
+		imgWebCamCapturedImage0.setPreserveRatio(true);
+
 
 		imgWebCamCapturedImage2.setFitHeight(height / 5);
 		imgWebCamCapturedImage2.setFitWidth(width / 5);
@@ -279,6 +288,7 @@ public class WebCamPreviewController implements Initializable {
 		imgWebCamCapturedImage.imageProperty().bind(imageProperty);
 		imgWebCamCapturedImage2.imageProperty().bind(imageProperty2);
 		imgWebCamCapturedImage3.imageProperty().bind(imageProperty3);
+		imgWebCamCapturedImage0.imageProperty().bind(imageProperty3);
 //		duplicatedCam.imageProperty().bind(imageProperty3);
 		// imgWebCamCapturedImage3.imageProperty().bind(miniFramePreview);
 		miniFrame.imageProperty().bind(miniFramePreview);
