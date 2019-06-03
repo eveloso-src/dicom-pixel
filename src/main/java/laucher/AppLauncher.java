@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class AppLauncher extends Application {
@@ -21,7 +22,6 @@ public class AppLauncher extends Application {
 		Parent root = null;
 		try {
 			root = FXMLLoader.load(getClass().getResource("/fxml/gui/WebCamPreview2.fxml"));
-			
 			
 			   
 

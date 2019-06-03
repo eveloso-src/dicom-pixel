@@ -45,6 +45,9 @@ public class WebCamPreviewController implements Initializable {
 	@FXML
 	Button btnStartCamera;
 	@FXML
+	javafx.scene.control.Label imgCounter;
+
+	@FXML
 	Button btnStopCamera;
 	@FXML
 	Button btnDisposeCamera;
@@ -76,13 +79,14 @@ public class WebCamPreviewController implements Initializable {
 	ImageView miniFrame;
 	@FXML
 	public Slider sliderFrame;
-	
+
+	public BufferedImage[] lBuffered;
 	public int speed;
-	
+
 	public ThreadSlider tslider;
-	
+
 	public TaskCamera task;
-	
+
 	ImageView duplicatedCam;
 
 	private BufferedImage grabbedImage;
@@ -90,7 +94,7 @@ public class WebCamPreviewController implements Initializable {
 	private CapturedImage[] arrayImg;
 	// private WebcamPanel selWebCamPanel = null;
 	private Webcam selWebCam = null;
-	
+
 	private Webcam webcamDefault = Webcam.getDefault();
 
 	private boolean stopCamera = false;
@@ -179,59 +183,51 @@ public class WebCamPreviewController implements Initializable {
 
 		comboSpeed.setItems(observableList);
 //		speed.selectionModelProperty().setValue("31 FPS");
-		comboSpeed.getSelectionModel().select(1);
 
 		comboSpeed.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 
-		
-
 			@Override
 			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
-				
-				if (arg2!=null && arg2.equals("30 FPS")) {
-					tslider.fps = 30;		
-				}
-				else if (arg2!=null && arg2.equals("15 FPS")) {
+
+				if (arg2 != null && arg2.equals("30 FPS")) {
+					tslider.fps = 30;
+				} else if (arg2 != null && arg2.equals("15 FPS")) {
 					tslider.fps = 60;
-				}
-				else {
+				} else {
 					tslider.fps = 15;
 				}
-				
+
 			}
 		});
 
-		
 	}
 
 	protected void setImageViewSize() {
 		double height = Integer.valueOf(AppLauncher.getProp("width")).intValue(); // bpWebCamPaneHolder.getHeight();
 		double width = Integer.valueOf(AppLauncher.getProp("height")).intValue();
 		; // bpWebCamPaneHolder.getWidth();
-		imgWebCamCapturedImage.setFitHeight(height / 3);
-		imgWebCamCapturedImage.setFitWidth(width / 3);
-		imgWebCamCapturedImage.prefHeight(height / 3);
-		imgWebCamCapturedImage.prefWidth(width / 3);
+		imgWebCamCapturedImage.setFitHeight(height / 2);
+		imgWebCamCapturedImage.setFitWidth(width / 2);
+		imgWebCamCapturedImage.prefHeight(height / 2);
+		imgWebCamCapturedImage.prefWidth(width / 2);
 		imgWebCamCapturedImage.setPreserveRatio(true);
 
-
-		imgWebCamCapturedImage0.setFitHeight(height / 5);
-		imgWebCamCapturedImage0.setFitWidth(width / 5);
-		imgWebCamCapturedImage0.prefHeight(height / 5);
-		imgWebCamCapturedImage0.prefWidth(width / 5);
+		imgWebCamCapturedImage0.setFitHeight(height / 4);
+		imgWebCamCapturedImage0.setFitWidth(width / 4);
+		imgWebCamCapturedImage0.prefHeight(height / 4);
+		imgWebCamCapturedImage0.prefWidth(width / 4);
 		imgWebCamCapturedImage0.setPreserveRatio(true);
 
-
-		imgWebCamCapturedImage2.setFitHeight(height / 5);
-		imgWebCamCapturedImage2.setFitWidth(width / 5);
-		imgWebCamCapturedImage2.prefHeight(height / 5);
-		imgWebCamCapturedImage2.prefWidth(width / 5);
+		imgWebCamCapturedImage2.setFitHeight(height / 1);
+		imgWebCamCapturedImage2.setFitWidth(width / 1);
+		imgWebCamCapturedImage2.prefHeight(height / 1);
+		imgWebCamCapturedImage2.prefWidth(width / 1);
 		imgWebCamCapturedImage2.setPreserveRatio(true);
 
-		imgWebCamCapturedImage3.setFitHeight(height / 5);
-		imgWebCamCapturedImage3.setFitWidth(width / 5);
-		imgWebCamCapturedImage3.prefHeight(height / 5);
-		imgWebCamCapturedImage3.prefWidth(width / 5);
+		imgWebCamCapturedImage3.setFitHeight(height / 1);
+		imgWebCamCapturedImage3.setFitWidth(width / 1);
+		imgWebCamCapturedImage3.prefHeight(height / 1);
+		imgWebCamCapturedImage3.prefWidth(width / 1);
 		imgWebCamCapturedImage3.setPreserveRatio(true);
 
 //		JFrame video1 = new JFrame("Vent");
@@ -267,42 +263,8 @@ public class WebCamPreviewController implements Initializable {
 		new Thread(webCamIntilizer).start();
 		// fpBottomPane.setDisable(false);
 		btnStartCamera.setDisable(true);
-		
-		FXMLLoader load  = new FXMLLoader();
-		FXMLLoader load2  = new FXMLLoader();
-		
-		load.setLocation(getClass().getResource("/fxml/gui/window.fxml"));
-		load2.setLocation(getClass().getResource("/fxml/gui/window.fxml"));
 
-		Stage stage = new Stage();
-        stage.setTitle("Monitor 1");
-//        try {
-//        	javafx.scene.Parent windowLoad = load.load();
-        	 javafx.scene.layout.StackPane secondaryLayout = new javafx.scene.layout.StackPane();
-             secondaryLayout.getChildren().add(imgWebCamCapturedImage2);
-			stage.setScene(new Scene(secondaryLayout, 450, 450));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-        stage.initModality(javafx.stage.Modality.NONE);
-//	    stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
-        stage.show();
-
-        
-		Stage stage2 = new Stage();
-        stage2.setTitle("Monitor 2");
-//        try {
-//        	javafx.scene.Parent windowLoad = load.load();
-        	 javafx.scene.layout.StackPane secondaryLayout2 = new javafx.scene.layout.StackPane();
-             secondaryLayout2.getChildren().add(imgWebCamCapturedImage3);
-			stage2.setScene(new Scene(secondaryLayout2, 450, 450));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-        stage2.initModality(javafx.stage.Modality.NONE);
-//	    stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
-        stage2.show();
-
+		new WindowUtil().openWindows(imgWebCamCapturedImage2, imgWebCamCapturedImage3);
 	}
 
 	protected void startWebCamStream() {
@@ -384,10 +346,19 @@ public class WebCamPreviewController implements Initializable {
 
 	public void createSlider(final ArrayDeque<BufferedImage> imagenes) {
 		// play images
-		BufferedImage[] lBuffered = new BufferedImage[imagenes.size()];
+		lBuffered = new BufferedImage[imagenes.size()];
 		Iterator<BufferedImage> it = imagenes.iterator();
 		// List<BufferedImage>list = new ArrayList<BufferedImage>();
 		int i = 0;
+
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				// Update UI here.
+				imgCounter.setText(imagenes.size() + "");
+			}
+		});
+
 		while (it.hasNext()) {
 			lBuffered[i] = (it.next());
 			i++;
@@ -412,7 +383,7 @@ public class WebCamPreviewController implements Initializable {
 //				System.out.println("obs " + obs);
 				sliderFrame.adjustValue(value);
 			}
-			
+
 		}
 
 		);
@@ -421,14 +392,11 @@ public class WebCamPreviewController implements Initializable {
 			// tslider.cancel();
 			TaskCamera.autoPlay = !TaskCamera.autoPlay;
 			if (TaskCamera.autoPlay) {
-				tslider = new ThreadSlider(sliderFrame, this);
+//				tslider = new ThreadSlider(sliderFrame, this);
 				// tslider.call();
 			}
 		});
 
-		BufferedImage frame;
-		int contProgress = 0;
-		int totalImg = imagenes.size();
 		tslider = new ThreadSlider(sliderFrame, this);
 		try {
 
@@ -453,7 +421,7 @@ public class WebCamPreviewController implements Initializable {
 //				}
 //
 //			}
-			
+
 //		});
 
 		// while (stopCamera) {
@@ -478,6 +446,81 @@ public class WebCamPreviewController implements Initializable {
 	public long getSpeed() {
 		// TODO Auto-generated method stub
 		return speed;
+	}
+
+	public void playBtnClick(ActionEvent event) {
+//		imageProperty3.setValue(SwingFXUtils.toFXImage(lBuffered[3], null));
+//		tslider = new ThreadSlider(sliderFrame, this);
+//		tslider.call();
+		play(task.imagenes);
+
+	}
+
+	private void play(ArrayDeque<BufferedImage> imagenes) {
+		double valor = sliderFrame.getValue();
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				int posicion = (int) valor;
+				if (posicion == (int) sliderFrame.getMax()) {
+					posicion = 0;
+				}
+
+				posicion++;
+				sliderFrame.setValue(posicion);
+				imageProperty3.setValue(SwingFXUtils.toFXImage(lBuffered[(int) sliderFrame.getValue()], null));
+				// Update UI here.
+				imgCounter.setText((int) sliderFrame.getValue() + "");
+			}
+		});
+
+	
+	}
+
+	public void backPlayClick(ActionEvent event) {
+//		imageProperty3.setValue(SwingFXUtils.toFXImage(lBuffered[3], null));
+//		tslider = new ThreadSlider(sliderFrame, this);
+//		tslider.call();
+		createSlider(task.imagenes);
+	}
+
+	public void fwdClick(ActionEvent event) {
+		double valor = sliderFrame.getValue();
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				int posicion = (int) valor;
+				if (posicion == (int) sliderFrame.getMax()) {
+					posicion = 0;
+				}
+
+				posicion++;
+				sliderFrame.setValue(posicion);
+				imageProperty3.setValue(SwingFXUtils.toFXImage(lBuffered[(int) sliderFrame.getValue()], null));
+				// Update UI here.
+				imgCounter.setText((int) sliderFrame.getValue() + "");
+			}
+		});
+
+	}
+
+	public void backClick(ActionEvent event) {
+		double valor = sliderFrame.getValue();
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				// Update UI here.
+				int posicion = (int) valor;
+				if (posicion == 0) {
+					posicion = (int) sliderFrame.getMax();
+				}
+				posicion--;
+				sliderFrame.setValue(posicion);
+				imageProperty3.setValue(SwingFXUtils.toFXImage(lBuffered[(int) sliderFrame.getValue()], null));
+				imgCounter.setText((int) sliderFrame.getValue() + "");
+			}
+		});
+
 	}
 
 }

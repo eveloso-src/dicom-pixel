@@ -11,7 +11,7 @@ public class DicomTest {
 
 	public static void main(String[] args) throws IOException, DicomException, Exception {
 
-		DicomFile ldcm = new DicomFile(args[0]); // we create the File
+		DicomFile ldcm = new DicomFile("C:\\Users\\Emiliano\\datos\\clases\\Cardiologico Angioplasti ITOIZ\\DICOMDIR"); // we create the File
 		ldcm.open(); // we open it (read the data)
 
 		// we get an iterator to the elements

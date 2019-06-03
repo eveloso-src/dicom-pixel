@@ -37,12 +37,7 @@ public class ThreadSlider extends Task<Void> {
 				e.printStackTrace();
 			}
 			nextVal = slider.getValue() + 1;
-			try {
-				Thread.sleep(controller.getSpeed());
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
 			if (nextVal == this.slider.getMax() - 1) {
 				nextVal = 0;
 			}

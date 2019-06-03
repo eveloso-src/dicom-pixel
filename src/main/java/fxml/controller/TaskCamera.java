@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 
 public class TaskCamera extends Task<Void> {
 
+	public ArrayDeque<BufferedImage> imagenes; 
 	public static boolean autoPlay = true;
 	BufferedImage[] listImg;
 	public boolean stopCamera = false;
@@ -54,7 +55,7 @@ public class TaskCamera extends Task<Void> {
 	@Override
 	protected Void call() throws Exception {
 
-		ArrayDeque<BufferedImage> imagenes = new ArrayDeque<BufferedImage>(1000);
+		imagenes = new ArrayDeque<BufferedImage>(1000);
 
 		// int nThreads = Runtime.getRuntime().availableProcessors();
 		// System.out.println("procesadores: " + nThreads);
@@ -121,8 +122,10 @@ public class TaskCamera extends Task<Void> {
 		}
 
 		autoPlay = true;
+		
 		webCamPreviewController.createSlider(imagenes);
 
+		
 		// TaskCamera.saveImages(imagenes);
 		return null;
 	}
