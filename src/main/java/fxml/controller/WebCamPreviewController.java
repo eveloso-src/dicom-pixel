@@ -1,9 +1,7 @@
 package fxml.controller;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -15,7 +13,6 @@ import com.github.sarxos.webcam.Webcam;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -25,16 +22,13 @@ import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 import laucher.AppLauncher;
 
 @SuppressWarnings("restriction")
@@ -83,6 +77,7 @@ public class WebCamPreviewController implements Initializable {
 	public BufferedImage[] lBuffered;
 	public int speed;
 
+	public ArrayDeque<BufferedImage> aqImagenes;
 	public ThreadSlider tslider;
 
 	public TaskCamera task;
@@ -346,6 +341,7 @@ public class WebCamPreviewController implements Initializable {
 
 	public void createSlider(final ArrayDeque<BufferedImage> imagenes) {
 		// play images
+		aqImagenes = imagenes;
 		lBuffered = new BufferedImage[imagenes.size()];
 		Iterator<BufferedImage> it = imagenes.iterator();
 		// List<BufferedImage>list = new ArrayList<BufferedImage>();
@@ -369,31 +365,15 @@ public class WebCamPreviewController implements Initializable {
 		sliderFrame.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
 				imageProperty.set(SwingFXUtils.toFXImage(listImg[new_val.intValue()], null));
-				// System.out.println(new_val);
 				// sliderFrame.setValue(new_val.intValue());
 				// sliderFrame.increment();
 			}
 		});
 
-		sliderFrame.valueChangingProperty().addListener((obs, oldVal, newVal) -> {
-			if (!newVal) {
-				double value = sliderFrame.getValue();
-//				System.out.println("value " + value);
-//				System.out.println("oldVal " + oldVal);
-//				System.out.println("obs " + obs);
-				sliderFrame.adjustValue(value);
-			}
-
-		}
-
-		);
-
 		sliderFrame.setOnMouseClicked((event) -> {
 			// tslider.cancel();
 			TaskCamera.autoPlay = !TaskCamera.autoPlay;
 			if (TaskCamera.autoPlay) {
-//				tslider = new ThreadSlider(sliderFrame, this);
-				// tslider.call();
 			}
 		});
 
@@ -402,7 +382,6 @@ public class WebCamPreviewController implements Initializable {
 
 			tslider.call();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -448,10 +427,7 @@ public class WebCamPreviewController implements Initializable {
 		return speed;
 	}
 
-	public void playBtnClick(ActionEvent event) {
-//		imageProperty3.setValue(SwingFXUtils.toFXImage(lBuffered[3], null));
-//		tslider = new ThreadSlider(sliderFrame, this);
-//		tslider.call();
+	public void fwdClick(ActionEvent event) {
 		play(task.imagenes);
 
 	}
@@ -474,33 +450,30 @@ public class WebCamPreviewController implements Initializable {
 			}
 		});
 
-	
 	}
 
 	public void backPlayClick(ActionEvent event) {
-//		imageProperty3.setValue(SwingFXUtils.toFXImage(lBuffered[3], null));
-//		tslider = new ThreadSlider(sliderFrame, this);
-//		tslider.call();
 		createSlider(task.imagenes);
 	}
 
-	public void fwdClick(ActionEvent event) {
-		double valor = sliderFrame.getValue();
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				int posicion = (int) valor;
-				if (posicion == (int) sliderFrame.getMax()) {
-					posicion = 0;
-				}
+	public void playBtnClick(ActionEvent event) throws InterruptedException {
 
-				posicion++;
-				sliderFrame.setValue(posicion);
-				imageProperty3.setValue(SwingFXUtils.toFXImage(lBuffered[(int) sliderFrame.getValue()], null));
-				// Update UI here.
-				imgCounter.setText((int) sliderFrame.getValue() + "");
-			}
-		});
+//		final Timeline timeline = new Timeline(new KeyFrame(Duration.millis(33), new EventHandler<ActionEvent>() {
+//			@Override
+//			public void handle(ActionEvent actionEvent) {
+//				Platform.runLater(() -> {
+//					sliderFrame.setValue(sliderFrame.getValue() + 1);
+//				});
+//			}
+//		}));
+//		Platform.runLater(timeline::play);
+		int count; // declared as global variable
+
+		// then the working logic in my eventhandler
+		Task task = new ThreadPlay(aqImagenes, sliderFrame) ;
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
 
 	}
 

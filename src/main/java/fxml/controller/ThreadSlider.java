@@ -15,7 +15,6 @@ public class ThreadSlider extends Task<Void> {
 		this.slider = sliderFrame;
 		this.controller = controller;
 		slider.setShowTickLabels(false);
-		//slider.setShowTickMarks(false);
 		slider.setMajorTickUnit(1);
 		slider.setMinorTickCount(1);
 		slider.setBlockIncrement(1);
@@ -28,20 +27,21 @@ public class ThreadSlider extends Task<Void> {
 	// throws Exception
 	{
 		double nextVal = 0;
+		System.out.println("autoplay " + TaskCamera.autoPlay);
+		System.out.println("fps " + fps);
 		while (TaskCamera.autoPlay) {
 
 			try {
 				Thread.sleep(fps);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			nextVal = slider.getValue() + 1;
+			nextVal = this.controller.sliderFrame.getValue() +1;
 
-			if (nextVal == this.slider.getMax() - 1) {
+			if (nextVal == this.controller.sliderFrame.getMax() - 1) {
 				nextVal = 0;
 			}
-			this.slider.setValue(nextVal);
+			this.controller.sliderFrame.setValue(nextVal);
 
 		}
 		 return null;
