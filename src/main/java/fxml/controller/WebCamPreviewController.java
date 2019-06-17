@@ -70,6 +70,10 @@ public class WebCamPreviewController implements Initializable {
 	ImageView imgWebCamCapturedImage2;
 	@FXML
 	ImageView imgWebCamCapturedImage3;
+	
+	@FXML
+	ImageView imgWebCamCapturedImage4;
+	
 	@FXML
 	ImageView imgPreview1;
 	@FXML
@@ -166,6 +170,7 @@ public class WebCamPreviewController implements Initializable {
 		List<ImageView> listViews = new ArrayList();
 		listViews.add(imgWebCamCapturedImage2);
 		listViews.add(imgWebCamCapturedImage3);
+		listViews.add(imgWebCamCapturedImage4);
 		WindowUtil.configurePreview(listViews, height, width);
 
 		imgWebCamCapturedImage.setFitHeight(height / 2);
@@ -208,7 +213,7 @@ public class WebCamPreviewController implements Initializable {
 		// fpBottomPane.setDisable(false);
 		btnStartCamera.setDisable(true);
 
-		new WindowUtil().openWindows(imgWebCamCapturedImage2, imgWebCamCapturedImage3);
+		new WindowUtil().openWindows(imgWebCamCapturedImage2, imgWebCamCapturedImage3, imgWebCamCapturedImage4);
 	}
 
 	protected void startWebCamStream() {
@@ -223,6 +228,8 @@ public class WebCamPreviewController implements Initializable {
 		imgWebCamCapturedImage.imageProperty().bind(imageProperty);
 		imgWebCamCapturedImage2.imageProperty().bind(imageProperty2);
 		imgWebCamCapturedImage3.imageProperty().bind(imageProperty3);
+		imgWebCamCapturedImage4.imageProperty().bind(imageProperty3);
+
 		imgPreview1.imageProperty().bind(imageProperty3);
 		imgPreview2.imageProperty().bind(imageProperty2);
 		imgPreview3.imageProperty().bind(imageProperty3);
@@ -317,13 +324,10 @@ public class WebCamPreviewController implements Initializable {
 		sliderFrame.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
 				imageProperty.set(SwingFXUtils.toFXImage(listImg[new_val.intValue()], null));
-				// sliderFrame.setValue(new_val.intValue());
-				// sliderFrame.increment();
 			}
 		});
 
 		sliderFrame.setOnMouseClicked((event) -> {
-			// tslider.cancel();
 			TaskCamera.autoPlay = !TaskCamera.autoPlay;
 			if (TaskCamera.autoPlay) {
 			}

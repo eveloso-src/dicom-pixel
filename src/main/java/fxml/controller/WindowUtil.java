@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 public class WindowUtil {
 
-	public void openWindows(ImageView imgWebCamCapturedImage2, ImageView imgWebCamCapturedImage3) {
+	public void openWindows(ImageView imgWebCamCapturedImage2, ImageView imgWebCamCapturedImage3, ImageView imgWebCamCapturedImage4) {
 
 		FXMLLoader load = new FXMLLoader();
 		FXMLLoader load2 = new FXMLLoader();
@@ -24,8 +24,6 @@ public class WindowUtil {
 
 		Stage stage = new Stage();
 		stage.setTitle("Monitor 1");
-//        try {
-//        	javafx.scene.Parent windowLoad = load.load();
 		javafx.scene.layout.StackPane secondaryLayout = new javafx.scene.layout.StackPane();
 		BorderPane pane = new BorderPane();
 		pane.setCenter(imgWebCamCapturedImage2);
@@ -34,56 +32,25 @@ public class WindowUtil {
 		secondaryLayout.getChildren().add(imgWebCamCapturedImage2);
 
 		imgWebCamCapturedImage2.fitWidthProperty().bind(secondaryLayout.widthProperty());
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
 		stage.initModality(javafx.stage.Modality.NONE);
-//	    stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
 		stage.show();
 
 		Stage stage2 = new Stage();
 		stage2.setTitle("Monitor 2");
-//        try {
-//        	javafx.scene.Parent windowLoad = load.load();
 		javafx.scene.layout.StackPane secondaryLayout2 = new javafx.scene.layout.StackPane();
 		secondaryLayout2.getChildren().add(imgWebCamCapturedImage3);
 		stage2.setScene(new Scene(secondaryLayout2, 450, 450));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
 		stage2.initModality(javafx.stage.Modality.NONE);
-//	    stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
 		stage2.show();
 		
-		/*
 		Stage stage3 = new Stage();
 		stage3.setTitle("Monitor 3");
-//        try {
-//        	javafx.scene.Parent windowLoad = load.load();
 		javafx.scene.layout.StackPane secondaryLayout3 = new javafx.scene.layout.StackPane();
-		secondaryLayout3.getChildren().add(imgWebCamCapturedImage3);
+		secondaryLayout3.getChildren().add(imgWebCamCapturedImage4);
 		stage3.setScene(new Scene(secondaryLayout3, 450, 450));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
 		stage3.initModality(javafx.stage.Modality.NONE);
-//	    stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
 		stage3.show();
 		
-		Stage stage4 = new Stage();
-		stage4.setTitle("Monitor 4");
-//        try {
-//        	javafx.scene.Parent windowLoad = load.load();
-		javafx.scene.layout.StackPane secondaryLayout4 = new javafx.scene.layout.StackPane();
-		secondaryLayout4.getChildren().add(imgWebCamCapturedImage3);
-		stage4.setScene(new Scene(secondaryLayout4, 450, 450));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-		stage4.initModality(javafx.stage.Modality.NONE);
-//	    stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
-		stage4.show();
-*/
 	}
 
 	public static void configureSmallPreview(List<ImageView> listPreview, double height, double width) {

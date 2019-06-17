@@ -156,6 +156,7 @@
                   <ImageView fx:id="imgWebCamCapturedImage3" fitHeight="131.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fx:id="imgWebCamCapturedImage" fitHeight="115.0" fitWidth="133.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.rowSpan="2" />
                   <ImageView fx:id="imgWebCamCapturedImage2" fitHeight="152.0" fitWidth="166.0" pickOnBounds="true" smooth="false" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                  <ImageView fx:id="imgWebCamCapturedImage4" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1" />
                </children>
             </GridPane>
          </children>
