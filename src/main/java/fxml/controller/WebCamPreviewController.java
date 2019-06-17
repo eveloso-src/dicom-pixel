@@ -124,23 +124,6 @@ public class WebCamPreviewController implements Initializable {
 	// @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
-		EventHandler<KeyEvent> keyEventHandler = new EventHandler<KeyEvent>() {
-
-			@Override
-			public void handle(KeyEvent ke) {
-				// TODO Auto-generated method stub
-				if (ke.getCode() == KeyCode.DIGIT1) {
-
-					imgPreview1.setSmooth(true);
-				}
-			}
-		};
-		borderPane.setOnKeyPressed(keyEventHandler);
-		comboSpeed.getItems().add("15 FPS");
-		comboSpeed.getItems().add("30 FPS");
-		comboSpeed.getItems().add("45 FPS");
-		comboSpeed.getSelectionModel().select(1);
-
 		// fpBottomPane.setDisable(true);
 		ObservableList<WebCamInfo> options = FXCollections.observableArrayList();
 		int webCamCounter = 0;
@@ -168,58 +151,12 @@ public class WebCamPreviewController implements Initializable {
 			}
 		});
 
-		comboSpeed.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (newValue.equals("15 FPS")) {
-					comboSpeed.getSelectionModel().select(0);
-					speed = 60;
-				} else if (newValue.equals("45 FPS")) {
-					comboSpeed.getSelectionModel().select(2);
-					speed = 15;
-				} else {
-					comboSpeed.getSelectionModel().select(1);
-					speed = 30;
-				}
-
-			}
-		});
-
-		comboSpeed.getSelectionModel().select(1);
 		Platform.runLater(new Runnable() {
 			// @Override
 			public void run() {
 				setImageViewSize();
 			}
 		});
-
-		List<String> obsList = new ArrayList<>();
-		obsList.add("15 FPS");
-		obsList.add("30 FPS");
-		obsList.add("45 FPS");
-		ObservableList<String> observableList = FXCollections.observableArrayList(obsList);
-		// obsListq = (SimpleListProperty<String>)
-		// FXCollections.observableList(obsList);
-		// list.itemsProperty().bindBidirectional(new SimpleListProperty<>(listItems));
-
-		comboSpeed.setItems(observableList);
-//		speed.selectionModelProperty().setValue("31 FPS");
-
-		comboSpeed.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-
-			@Override
-			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
-
-				if (arg2 != null && arg2.equals("30 FPS")) {
-					tslider.fps = 30;
-				} else if (arg2 != null && arg2.equals("15 FPS")) {
-					tslider.fps = 60;
-				} else {
-					tslider.fps = 15;
-				}
-
-			}
-		});
-
 	}
 
 	protected void setImageViewSize() {
@@ -516,6 +453,19 @@ public class WebCamPreviewController implements Initializable {
 
 	public static void selectImgPreview1() {
 
+	}
+
+	public void speed15() {
+		WebCamPreviewController.speed = 60;
+
+	}
+
+	public void speed30() {
+		WebCamPreviewController.speed = 33;
+	}
+
+	public void speed45() {
+		WebCamPreviewController.speed = 16;
 	}
 
 }

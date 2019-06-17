@@ -8,7 +8,6 @@ public class ThreadSlider extends Task<Void> {
 
 	Slider slider;
 	WebCamPreviewController controller;
-	public int fps;
 
 	public ThreadSlider(Slider sliderFrame, WebCamPreviewController controller) {
 		// TODO Auto-generated constructor stub
@@ -19,7 +18,6 @@ public class ThreadSlider extends Task<Void> {
 		slider.setMinorTickCount(1);
 		slider.setBlockIncrement(1);
 		
-		this.fps = 30;
 	}
 
 	@Override
@@ -28,11 +26,10 @@ public class ThreadSlider extends Task<Void> {
 	{
 		double nextVal = 0;
 		System.out.println("autoplay " + TaskCamera.autoPlay);
-		System.out.println("fps " + fps);
 		while (TaskCamera.autoPlay) {
 
 			try {
-				Thread.sleep(fps);
+				Thread.sleep(WebCamPreviewController.speed);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
