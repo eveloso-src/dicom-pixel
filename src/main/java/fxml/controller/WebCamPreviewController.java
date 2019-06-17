@@ -225,56 +225,24 @@ public class WebCamPreviewController implements Initializable {
 	protected void setImageViewSize() {
 		double height = Integer.valueOf(AppLauncher.getProp("width")).intValue(); // bpWebCamPaneHolder.getHeight();
 		double width = Integer.valueOf(AppLauncher.getProp("height")).intValue();
-		; // bpWebCamPaneHolder.getWidth();
+
+		List<ImageView> listViews = new ArrayList();
+		listViews.add(imgWebCamCapturedImage2);
+		listViews.add(imgWebCamCapturedImage3);
+		WindowUtil.configurePreview(listViews, height, width);
+
 		imgWebCamCapturedImage.setFitHeight(height / 2);
 		imgWebCamCapturedImage.setFitWidth(width / 2);
 		imgWebCamCapturedImage.prefHeight(height / 2);
 		imgWebCamCapturedImage.prefWidth(width / 2);
 		imgWebCamCapturedImage.setPreserveRatio(true);
-
-		imgPreview1.setFitHeight(height / 5);
-		imgPreview1.setFitWidth(width / 5);
-		imgPreview1.prefHeight(height / 5);
-		imgPreview1.prefWidth(width / 5);
-		imgPreview1.setPreserveRatio(true);
-
-		imgPreview2.setFitHeight(height / 5);
-		imgPreview2.setFitWidth(width / 5);
-		imgPreview2.prefHeight(height / 5);
-		imgPreview2.prefWidth(width / 5);
-		imgPreview2.setPreserveRatio(true);
-
-		imgPreview3.setFitHeight(height / 5);
-		imgPreview3.setFitWidth(width / 5);
-		imgPreview3.prefHeight(height / 5);
-		imgPreview3.prefWidth(width / 5);
-		imgPreview3.setPreserveRatio(true);
-
-		imgPreview4.setFitHeight(height / 5);
-		imgPreview4.setFitWidth(width / 5);
-		imgPreview4.prefHeight(height / 5);
-		imgPreview4.prefWidth(width / 5);
-		imgPreview4.setPreserveRatio(true);
-
 		
-		imgWebCamCapturedImage2.setFitHeight(height / 1);
-		imgWebCamCapturedImage2.setFitWidth(width / 1);
-		imgWebCamCapturedImage2.prefHeight(height / 1);
-		imgWebCamCapturedImage2.prefWidth(width / 1);
-		imgWebCamCapturedImage2.setPreserveRatio(true);
-
-		imgWebCamCapturedImage3.setFitHeight(height / 1);
-		imgWebCamCapturedImage3.setFitWidth(width / 1);
-		imgWebCamCapturedImage3.prefHeight(height / 1);
-		imgWebCamCapturedImage3.prefWidth(width / 1);
-		imgWebCamCapturedImage3.setPreserveRatio(true);
-
-//		JFrame video1 = new JFrame("Vent");
-//		video1.setSize(600, 600);
-//		JPanel jpane = new JPanel();
-//		jpane.add(imgWebCamCapturedImag);
-//		video1.add(jpane);
-
+		List<ImageView> listPreview = new ArrayList();
+		listPreview.add(imgPreview1);
+		listPreview.add(imgPreview2);
+		listPreview.add(imgPreview3);
+		listPreview.add(imgPreview4);
+		WindowUtil.configureSmallPreview(listPreview, height, width);
 	}
 
 	protected void initializeWebCam(final int webCamIndex) {

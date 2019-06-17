@@ -1,5 +1,7 @@
 package fxml.controller;
 
+import java.util.List;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
@@ -9,7 +11,7 @@ import javafx.stage.Stage;
 public class WindowUtil {
 
 	public void openWindows(ImageView imgWebCamCapturedImage2, ImageView imgWebCamCapturedImage3) {
-		
+
 		FXMLLoader load = new FXMLLoader();
 		FXMLLoader load2 = new FXMLLoader();
 		FXMLLoader load3 = new FXMLLoader();
@@ -52,7 +54,48 @@ public class WindowUtil {
 		stage2.initModality(javafx.stage.Modality.NONE);
 //	    stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
 		stage2.show();
-		
+
+	}
+
+	public static void configureSmallPreview(List<ImageView> listPreview, double height, double width) {
+		// TODO Auto-generated method stub
+
+		for (ImageView imgPreview1 : listPreview) {
+
+			imgPreview1.setFitHeight(height / 5);
+			imgPreview1.setFitWidth(width / 5);
+			imgPreview1.prefHeight(height / 5);
+			imgPreview1.prefWidth(width / 5);
+			imgPreview1.setPreserveRatio(true);
+		}
+
+		/*
+		 * imgPreview2.setFitHeight(height / 5); imgPreview2.setFitWidth(width / 5);
+		 * imgPreview2.prefHeight(height / 5); imgPreview2.prefWidth(width / 5);
+		 * imgPreview2.setPreserveRatio(true);
+		 * 
+		 * imgPreview3.setFitHeight(height / 5); imgPreview3.setFitWidth(width / 5);
+		 * imgPreview3.prefHeight(height / 5); imgPreview3.prefWidth(width / 5);
+		 * imgPreview3.setPreserveRatio(true);
+		 * 
+		 * imgPreview4.setFitHeight(height / 5); imgPreview4.setFitWidth(width / 5);
+		 * imgPreview4.prefHeight(height / 5); imgPreview4.prefWidth(width / 5);
+		 * imgPreview4.setPreserveRatio(true);
+		 * 
+		 */
+	}
+
+	public static void configurePreview(List<ImageView> listViews, double height, double width) {
+
+		for (ImageView imgWebCamCapturedImage2 : listViews) {
+
+			imgWebCamCapturedImage2.setFitHeight(height / 1);
+			imgWebCamCapturedImage2.setFitWidth(width / 1);
+			imgWebCamCapturedImage2.prefHeight(height / 1);
+			imgWebCamCapturedImage2.prefWidth(width / 1);
+			imgWebCamCapturedImage2.setPreserveRatio(true);
+		}
+
 	}
 
 }
