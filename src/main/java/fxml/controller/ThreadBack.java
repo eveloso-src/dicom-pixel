@@ -7,13 +7,13 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.Slider;
 
-public class ThreadPlay extends Task<Void> {
+public class ThreadBack extends Task<Void> {
 
 	int index = 0;
 	ArrayDeque<BufferedImage> aqImagenes;
 	Slider sliderFrame;
 
-	public ThreadPlay(ArrayDeque<BufferedImage> aqImagenes, Slider sliderFrame) {
+	public ThreadBack(ArrayDeque<BufferedImage> aqImagenes, Slider sliderFrame) {
 		this.aqImagenes = aqImagenes;
 		this.sliderFrame = sliderFrame;
 
@@ -22,21 +22,19 @@ public class ThreadPlay extends Task<Void> {
 	@Override
 	public Void call() throws Exception {
 //		for (int i = 0; i < aqImagenes.size() - 1; i++) {
-		while (index < aqImagenes.size() - 1 && TaskCamera.autoPlay) {
+		index = (int) sliderFrame.getMax() - 1;
+		System.out.println("index " + index);
+		while (index > -1 && TaskCamera.autoPlay) {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					index++;
-					if (index == aqImagenes.size() - 1) {
-						sliderFrame.setValue(0);
-						index = 0;
+					index--;
+					if (index == -1) {
+						sliderFrame.setValue(sliderFrame.getMax() - 1);
+						index = (int) sliderFrame.getMax() - 1;
 					} else {
-						if (sliderFrame.getValue() + 1 != sliderFrame.getMax() - 1) {
-							sliderFrame.setValue(sliderFrame.getValue() + 1);
-						}
-						else {
-							sliderFrame.setValue(0);
-							index = 0;
+						if (sliderFrame.getValue() - 1 != -1) {
+							sliderFrame.setValue(sliderFrame.getValue() - 1);
 						}
 					}
 				}

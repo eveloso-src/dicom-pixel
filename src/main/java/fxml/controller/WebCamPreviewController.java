@@ -438,7 +438,7 @@ public class WebCamPreviewController implements Initializable {
 			@Override
 			public void run() {
 				int posicion = (int) valor;
-				if (posicion == (int) sliderFrame.getMax()) {
+				if (posicion == (int) sliderFrame.getMax() - 1) {
 					posicion = 0;
 				}
 
@@ -452,48 +452,40 @@ public class WebCamPreviewController implements Initializable {
 
 	}
 
-	public void backPlayClick(ActionEvent event) {
-		createSlider(task.imagenes);
-	}
-
-	public void playBtnClick(ActionEvent event) throws InterruptedException {
-
-//		final Timeline timeline = new Timeline(new KeyFrame(Duration.millis(33), new EventHandler<ActionEvent>() {
-//			@Override
-//			public void handle(ActionEvent actionEvent) {
-//				Platform.runLater(() -> {
-//					sliderFrame.setValue(sliderFrame.getValue() + 1);
-//				});
-//			}
-//		}));
-//		Platform.runLater(timeline::play);
-		int count; // declared as global variable
-
-		// then the working logic in my eventhandler
-		Task task = new ThreadPlay(aqImagenes, sliderFrame) ;
-		Thread th = new Thread(task);
-		th.setDaemon(true);
-		th.start();
-
-	}
-
 	public void backClick(ActionEvent event) {
 		double valor = sliderFrame.getValue();
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				// Update UI here.
 				int posicion = (int) valor;
 				if (posicion == 0) {
 					posicion = (int) sliderFrame.getMax();
 				}
+
 				posicion--;
 				sliderFrame.setValue(posicion);
 				imageProperty3.setValue(SwingFXUtils.toFXImage(lBuffered[(int) sliderFrame.getValue()], null));
+				// Update UI here.
 				imgCounter.setText((int) sliderFrame.getValue() + "");
 			}
 		});
 
+	}
+
+	public void playBtnClick(ActionEvent event) throws InterruptedException {
+		TaskCamera.autoPlay = true;
+		Task task = new ThreadPlay(aqImagenes, sliderFrame);
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
+	}
+
+	public void backPlayClick(ActionEvent event) {
+		TaskCamera.autoPlay = true;
+		Task task = new ThreadBack(aqImagenes, sliderFrame);
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
 	}
 
 }
