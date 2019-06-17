@@ -2,21 +2,20 @@ package fxml.controller;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
+import java.util.Iterator;
+
 import javafx.application.Platform;
-
+import javafx.beans.property.ObjectProperty;
 import javafx.concurrent.Task;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
 
-public class ThreadPlay extends Task<Void> {
+public class ThreadPlay extends BaseClipThread {
 
-	int index = 0;
-	ArrayDeque<BufferedImage> aqImagenes;
-	Slider sliderFrame;
 
-	public ThreadPlay(ArrayDeque<BufferedImage> aqImagenes, Slider sliderFrame) {
-		this.aqImagenes = aqImagenes;
-		this.sliderFrame = sliderFrame;
-
+	public ThreadPlay(ArrayDeque<BufferedImage> aqImagenes, Slider sliderFrame, ObjectProperty<Image> imageProperty3) {
+		super(aqImagenes, sliderFrame, imageProperty3);
 	}
 
 	@Override
@@ -31,7 +30,7 @@ public class ThreadPlay extends Task<Void> {
 						sliderFrame.setValue(0);
 						index = 0;
 					} else {
-						if (sliderFrame.getValue() + 1 != sliderFrame.getMax() - 1) {
+						if (sliderFrame.getValue() + 1 != sliderFrame.getMax() - 2) {
 							sliderFrame.setValue(sliderFrame.getValue() + 1);
 						}
 						else {
@@ -39,6 +38,7 @@ public class ThreadPlay extends Task<Void> {
 							index = 0;
 						}
 					}
+					imageProperty3.setValue(SwingFXUtils.toFXImage(lBuffered[(int) sliderFrame.getValue()], null));
 				}
 			});
 

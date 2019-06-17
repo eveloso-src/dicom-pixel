@@ -3,20 +3,17 @@ package fxml.controller;
 import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 import javafx.application.Platform;
-
+import javafx.beans.property.ObjectProperty;
 import javafx.concurrent.Task;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
 
-public class ThreadBack extends Task<Void> {
+public class ThreadBack extends BaseClipThread {
 
-	int index = 0;
-	ArrayDeque<BufferedImage> aqImagenes;
-	Slider sliderFrame;
+	public ThreadBack(ArrayDeque<BufferedImage> aqImagenes, Slider sliderFrame, ObjectProperty<Image> imageProperty3) {
 
-	public ThreadBack(ArrayDeque<BufferedImage> aqImagenes, Slider sliderFrame) {
-		this.aqImagenes = aqImagenes;
-		this.sliderFrame = sliderFrame;
-
+		super(aqImagenes, sliderFrame, imageProperty3);
 	}
 
 	@Override
@@ -37,7 +34,10 @@ public class ThreadBack extends Task<Void> {
 							sliderFrame.setValue(sliderFrame.getValue() - 1);
 						}
 					}
+					imageProperty3.setValue(SwingFXUtils.toFXImage(lBuffered[(int) sliderFrame.getValue()], null));
+
 				}
+				
 			});
 
 			Thread.sleep(30);

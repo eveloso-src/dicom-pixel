@@ -14,6 +14,7 @@ import com.github.sarxos.webcam.Webcam;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -21,6 +22,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -28,6 +30,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import laucher.AppLauncher;
 
@@ -38,6 +42,8 @@ public class WebCamPreviewController implements Initializable {
 	// public static final double IMAGE_HEIGTH = 800;
 	@FXML
 	Button btnStartCamera;
+	@FXML
+	BorderPane borderPane;
 	@FXML
 	javafx.scene.control.Label imgCounter;
 
@@ -65,7 +71,14 @@ public class WebCamPreviewController implements Initializable {
 	@FXML
 	ImageView imgWebCamCapturedImage3;
 	@FXML
-	ImageView imgWebCamCapturedImage0;
+	ImageView imgPreview1;
+	@FXML
+	ImageView imgPreview2;
+	@FXML
+	ImageView imgPreview3;
+	@FXML
+	ImageView imgPreview4;
+	
 	@FXML
 	ImageView video1;
 
@@ -111,6 +124,18 @@ public class WebCamPreviewController implements Initializable {
 	// @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
+		EventHandler<KeyEvent> keyEventHandler = new EventHandler<KeyEvent>() {
+			
+			@Override
+			public void handle(KeyEvent ke) {
+				// TODO Auto-generated method stub
+				  if (ke.getCode() == KeyCode.DIGIT1) {
+
+					  imgPreview1.setSmooth(true);
+			        } 
+			}
+		};
+		borderPane.setOnKeyPressed(keyEventHandler);
 		comboSpeed.getItems().add("15 FPS");
 		comboSpeed.getItems().add("30 FPS");
 		comboSpeed.getItems().add("45 FPS");
@@ -207,12 +232,31 @@ public class WebCamPreviewController implements Initializable {
 		imgWebCamCapturedImage.prefWidth(width / 2);
 		imgWebCamCapturedImage.setPreserveRatio(true);
 
-		imgWebCamCapturedImage0.setFitHeight(height / 4);
-		imgWebCamCapturedImage0.setFitWidth(width / 4);
-		imgWebCamCapturedImage0.prefHeight(height / 4);
-		imgWebCamCapturedImage0.prefWidth(width / 4);
-		imgWebCamCapturedImage0.setPreserveRatio(true);
+		imgPreview1.setFitHeight(height / 5);
+		imgPreview1.setFitWidth(width / 5);
+		imgPreview1.prefHeight(height / 5);
+		imgPreview1.prefWidth(width / 5);
+		imgPreview1.setPreserveRatio(true);
 
+		imgPreview2.setFitHeight(height / 5);
+		imgPreview2.setFitWidth(width / 5);
+		imgPreview2.prefHeight(height / 5);
+		imgPreview2.prefWidth(width / 5);
+		imgPreview2.setPreserveRatio(true);
+
+		imgPreview3.setFitHeight(height / 5);
+		imgPreview3.setFitWidth(width / 5);
+		imgPreview3.prefHeight(height / 5);
+		imgPreview3.prefWidth(width / 5);
+		imgPreview3.setPreserveRatio(true);
+
+		imgPreview4.setFitHeight(height / 5);
+		imgPreview4.setFitWidth(width / 5);
+		imgPreview4.prefHeight(height / 5);
+		imgPreview4.prefWidth(width / 5);
+		imgPreview4.setPreserveRatio(true);
+
+		
 		imgWebCamCapturedImage2.setFitHeight(height / 1);
 		imgWebCamCapturedImage2.setFitWidth(width / 1);
 		imgWebCamCapturedImage2.prefHeight(height / 1);
@@ -274,7 +318,10 @@ public class WebCamPreviewController implements Initializable {
 		imgWebCamCapturedImage.imageProperty().bind(imageProperty);
 		imgWebCamCapturedImage2.imageProperty().bind(imageProperty2);
 		imgWebCamCapturedImage3.imageProperty().bind(imageProperty3);
-		imgWebCamCapturedImage0.imageProperty().bind(imageProperty3);
+		imgPreview1.imageProperty().bind(imageProperty3);
+		imgPreview2.imageProperty().bind(imageProperty2);
+		imgPreview3.imageProperty().bind(imageProperty3);
+		imgPreview4.imageProperty().bind(imageProperty3);
 //		duplicatedCam.imageProperty().bind(imageProperty3);
 		// imgWebCamCapturedImage3.imageProperty().bind(miniFramePreview);
 		miniFrame.imageProperty().bind(miniFramePreview);
@@ -428,22 +475,34 @@ public class WebCamPreviewController implements Initializable {
 	}
 
 	public void fwdClick(ActionEvent event) {
-		play(task.imagenes);
+		play(task.imagenes, "+");
 
 	}
 
-	private void play(ArrayDeque<BufferedImage> imagenes) {
+	private void play(ArrayDeque<BufferedImage> imagenes, String sign) {
 		double valor = sliderFrame.getValue();
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				int posicion = (int) valor;
-				if (posicion == (int) sliderFrame.getMax() - 1) {
-					posicion = 0;
+
+				if (sign.equals("+")) {
+					
+					posicion++;
+					sliderFrame.setValue(posicion);
+					if (posicion == (int) sliderFrame.getMax() - 1) {
+						posicion = 0;
+					}
+				}
+				else {
+					posicion--;					
+					sliderFrame.setValue(posicion);
+					if (posicion == 0) {
+						posicion = (int) sliderFrame.getMax();
+					}
+
 				}
 
-				posicion++;
-				sliderFrame.setValue(posicion);
 				imageProperty3.setValue(SwingFXUtils.toFXImage(lBuffered[(int) sliderFrame.getValue()], null));
 				// Update UI here.
 				imgCounter.setText((int) sliderFrame.getValue() + "");
@@ -453,28 +512,12 @@ public class WebCamPreviewController implements Initializable {
 	}
 
 	public void backClick(ActionEvent event) {
-		double valor = sliderFrame.getValue();
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				int posicion = (int) valor;
-				if (posicion == 0) {
-					posicion = (int) sliderFrame.getMax();
-				}
-
-				posicion--;
-				sliderFrame.setValue(posicion);
-				imageProperty3.setValue(SwingFXUtils.toFXImage(lBuffered[(int) sliderFrame.getValue()], null));
-				// Update UI here.
-				imgCounter.setText((int) sliderFrame.getValue() + "");
-			}
-		});
-
+		play(aqImagenes, "-");
 	}
 
-	public void playBtnClick(ActionEvent event) throws InterruptedException {
+	public void playBtnClick(ActionEvent event) {
 		TaskCamera.autoPlay = true;
-		Task task = new ThreadPlay(aqImagenes, sliderFrame);
+		Task task = new ThreadPlay(aqImagenes, sliderFrame, imageProperty3);
 		Thread th = new Thread(task);
 		th.setDaemon(true);
 		th.start();
@@ -482,10 +525,28 @@ public class WebCamPreviewController implements Initializable {
 
 	public void backPlayClick(ActionEvent event) {
 		TaskCamera.autoPlay = true;
-		Task task = new ThreadBack(aqImagenes, sliderFrame);
+		Task task = new ThreadBack(aqImagenes, sliderFrame, imageProperty3);
 		Thread th = new Thread(task);
 		th.setDaemon(true);
 		th.start();
+	}
+
+	
+	public void imgPreview1Clicked(ActionEvent event) {
+		System.out.println("imgpreview 1 clicked");
+	}
+	public void imgPreview2Clicked(ActionEvent event) {
+		System.out.println("imgpreview 1 clicked");
+	}
+	public void imgPreview3Clicked(ActionEvent event) {
+		System.out.println("imgpreview 1 clicked");
+	}
+	public void imgPreview4Clicked(ActionEvent event) {
+		System.out.println("imgpreview 1 clicked");
+	}
+
+	public static void selectImgPreview1() {
+		
 	}
 
 }
