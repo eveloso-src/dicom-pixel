@@ -54,7 +54,36 @@ public class WindowUtil {
 		stage2.initModality(javafx.stage.Modality.NONE);
 //	    stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
 		stage2.show();
-
+		
+		/*
+		Stage stage3 = new Stage();
+		stage3.setTitle("Monitor 3");
+//        try {
+//        	javafx.scene.Parent windowLoad = load.load();
+		javafx.scene.layout.StackPane secondaryLayout3 = new javafx.scene.layout.StackPane();
+		secondaryLayout3.getChildren().add(imgWebCamCapturedImage3);
+		stage3.setScene(new Scene(secondaryLayout3, 450, 450));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+		stage3.initModality(javafx.stage.Modality.NONE);
+//	    stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
+		stage3.show();
+		
+		Stage stage4 = new Stage();
+		stage4.setTitle("Monitor 4");
+//        try {
+//        	javafx.scene.Parent windowLoad = load.load();
+		javafx.scene.layout.StackPane secondaryLayout4 = new javafx.scene.layout.StackPane();
+		secondaryLayout4.getChildren().add(imgWebCamCapturedImage3);
+		stage4.setScene(new Scene(secondaryLayout4, 450, 450));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+		stage4.initModality(javafx.stage.Modality.NONE);
+//	    stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
+		stage4.show();
+*/
 	}
 
 	public static void configureSmallPreview(List<ImageView> listPreview, double height, double width) {

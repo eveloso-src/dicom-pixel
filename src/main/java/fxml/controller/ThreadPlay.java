@@ -42,7 +42,7 @@ public class ThreadPlay extends BaseClipThread {
 				}
 			});
 
-			Thread.sleep(30);
+			Thread.sleep(WebCamPreviewController.speed);
 
 		}
 		return null;

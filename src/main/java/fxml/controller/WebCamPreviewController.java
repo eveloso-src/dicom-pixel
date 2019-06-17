@@ -78,7 +78,7 @@ public class WebCamPreviewController implements Initializable {
 	ImageView imgPreview3;
 	@FXML
 	ImageView imgPreview4;
-	
+
 	@FXML
 	ImageView video1;
 
@@ -88,7 +88,7 @@ public class WebCamPreviewController implements Initializable {
 	public Slider sliderFrame;
 
 	public BufferedImage[] lBuffered;
-	public int speed;
+	public static int speed = 30;
 
 	public ArrayDeque<BufferedImage> aqImagenes;
 	public ThreadSlider tslider;
@@ -125,14 +125,14 @@ public class WebCamPreviewController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
 		EventHandler<KeyEvent> keyEventHandler = new EventHandler<KeyEvent>() {
-			
+
 			@Override
 			public void handle(KeyEvent ke) {
 				// TODO Auto-generated method stub
-				  if (ke.getCode() == KeyCode.DIGIT1) {
+				if (ke.getCode() == KeyCode.DIGIT1) {
 
-					  imgPreview1.setSmooth(true);
-			        } 
+					imgPreview1.setSmooth(true);
+				}
 			}
 		};
 		borderPane.setOnKeyPressed(keyEventHandler);
@@ -236,7 +236,7 @@ public class WebCamPreviewController implements Initializable {
 		imgWebCamCapturedImage.prefHeight(height / 2);
 		imgWebCamCapturedImage.prefWidth(width / 2);
 		imgWebCamCapturedImage.setPreserveRatio(true);
-		
+
 		List<ImageView> listPreview = new ArrayList();
 		listPreview.add(imgPreview1);
 		listPreview.add(imgPreview2);
@@ -455,15 +455,14 @@ public class WebCamPreviewController implements Initializable {
 				int posicion = (int) valor;
 
 				if (sign.equals("+")) {
-					
+
 					posicion++;
 					sliderFrame.setValue(posicion);
 					if (posicion == (int) sliderFrame.getMax() - 1) {
 						posicion = 0;
 					}
-				}
-				else {
-					posicion--;					
+				} else {
+					posicion--;
 					sliderFrame.setValue(posicion);
 					if (posicion == 0) {
 						posicion = (int) sliderFrame.getMax();
@@ -499,22 +498,24 @@ public class WebCamPreviewController implements Initializable {
 		th.start();
 	}
 
-	
 	public void imgPreview1Clicked(ActionEvent event) {
 		System.out.println("imgpreview 1 clicked");
 	}
+
 	public void imgPreview2Clicked(ActionEvent event) {
 		System.out.println("imgpreview 1 clicked");
 	}
+
 	public void imgPreview3Clicked(ActionEvent event) {
 		System.out.println("imgpreview 1 clicked");
 	}
+
 	public void imgPreview4Clicked(ActionEvent event) {
 		System.out.println("imgpreview 1 clicked");
 	}
 
 	public static void selectImgPreview1() {
-		
+
 	}
 
 }
