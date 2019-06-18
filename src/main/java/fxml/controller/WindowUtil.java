@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 public class WindowUtil {
 
-	public void openWindows(ImageView imgWebCamCapturedImage2, ImageView imgWebCamCapturedImage3, ImageView imgWebCamCapturedImage4) {
+	public void openWindows(ImageView imgWebCamCapturedImage2, ImageView imgWebCamCapturedImage3, ImageView imgWebCamCapturedImage4, ImageView imgWebCamCapturedImage5) {
 
 		FXMLLoader load = new FXMLLoader();
 		FXMLLoader load2 = new FXMLLoader();
@@ -50,6 +50,14 @@ public class WindowUtil {
 		stage3.setScene(new Scene(secondaryLayout3, 450, 450));
 		stage3.initModality(javafx.stage.Modality.NONE);
 		stage3.show();
+
+		Stage stage4 = new Stage();
+		stage4.setTitle("Monitor 4");
+		javafx.scene.layout.StackPane secondaryLayout4 = new javafx.scene.layout.StackPane();
+		secondaryLayout4.getChildren().add(imgWebCamCapturedImage5);
+		stage4.setScene(new Scene(secondaryLayout4, 450, 450));
+		stage4.initModality(javafx.stage.Modality.NONE);
+		stage4.show();
 		
 	}
 

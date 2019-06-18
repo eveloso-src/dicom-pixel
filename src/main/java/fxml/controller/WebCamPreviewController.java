@@ -46,6 +46,21 @@ public class WebCamPreviewController implements Initializable {
 	BorderPane borderPane;
 	@FXML
 	javafx.scene.control.Label imgCounter;
+	@FXML
+	Button fps15;
+	@FXML
+	Button fps30;
+	@FXML
+	Button fps45;
+
+	@FXML
+	javafx.scene.layout.Pane panePreview1;
+	@FXML
+	javafx.scene.layout.Pane panePreview2;
+	@FXML
+	javafx.scene.layout.Pane panePreview3;
+	@FXML
+	javafx.scene.layout.Pane panePreview4;
 
 	@FXML
 	Button btnStopCamera;
@@ -73,7 +88,10 @@ public class WebCamPreviewController implements Initializable {
 	
 	@FXML
 	ImageView imgWebCamCapturedImage4;
-	
+
+	@FXML
+	ImageView imgWebCamCapturedImage5;
+
 	@FXML
 	ImageView imgPreview1;
 	@FXML
@@ -171,6 +189,7 @@ public class WebCamPreviewController implements Initializable {
 		listViews.add(imgWebCamCapturedImage2);
 		listViews.add(imgWebCamCapturedImage3);
 		listViews.add(imgWebCamCapturedImage4);
+		listViews.add(imgWebCamCapturedImage5);
 		WindowUtil.configurePreview(listViews, height, width);
 
 		imgWebCamCapturedImage.setFitHeight(height / 2);
@@ -213,7 +232,7 @@ public class WebCamPreviewController implements Initializable {
 		// fpBottomPane.setDisable(false);
 		btnStartCamera.setDisable(true);
 
-		new WindowUtil().openWindows(imgWebCamCapturedImage2, imgWebCamCapturedImage3, imgWebCamCapturedImage4);
+		new WindowUtil().openWindows(imgWebCamCapturedImage2, imgWebCamCapturedImage3, imgWebCamCapturedImage4, imgWebCamCapturedImage5);
 	}
 
 	protected void startWebCamStream() {
@@ -229,6 +248,7 @@ public class WebCamPreviewController implements Initializable {
 		imgWebCamCapturedImage2.imageProperty().bind(imageProperty2);
 		imgWebCamCapturedImage3.imageProperty().bind(imageProperty3);
 		imgWebCamCapturedImage4.imageProperty().bind(imageProperty3);
+		imgWebCamCapturedImage5.imageProperty().bind(imageProperty3);
 
 		imgPreview1.imageProperty().bind(imageProperty3);
 		imgPreview2.imageProperty().bind(imageProperty2);
@@ -328,6 +348,7 @@ public class WebCamPreviewController implements Initializable {
 		});
 
 		sliderFrame.setOnMouseClicked((event) -> {
+			// tslider.cancel();
 			TaskCamera.autoPlay = !TaskCamera.autoPlay;
 			if (TaskCamera.autoPlay) {
 			}
@@ -440,19 +461,19 @@ public class WebCamPreviewController implements Initializable {
 	}
 
 	public void imgPreview1Clicked(ActionEvent event) {
-		System.out.println("imgpreview 1 clicked");
+		panePreview1.setStyle("-fx-border-color: #ff0000; -fx-border-width: 5px;");
 	}
 
 	public void imgPreview2Clicked(ActionEvent event) {
-		System.out.println("imgpreview 1 clicked");
+		panePreview2.setStyle("-fx-border-color: #ff0000; -fx-border-width: 5px;");
 	}
 
 	public void imgPreview3Clicked(ActionEvent event) {
-		System.out.println("imgpreview 1 clicked");
+		panePreview3.setStyle("-fx-border-color: #ff0000; -fx-border-width: 5px;");
 	}
 
 	public void imgPreview4Clicked(ActionEvent event) {
-		System.out.println("imgpreview 1 clicked");
+		panePreview4.setStyle("-fx-border-color: #ff0000; -fx-border-width: 5px;");
 	}
 
 	public static void selectImgPreview1() {
@@ -461,15 +482,25 @@ public class WebCamPreviewController implements Initializable {
 
 	public void speed15() {
 		WebCamPreviewController.speed = 60;
+		fps15.setStyle("-fx-border-color: #ff0000; -fx-border-width: 2px;");
+		fps45.setStyle(null);
+		fps30.setStyle(null);
 
 	}
 
 	public void speed30() {
 		WebCamPreviewController.speed = 33;
+		fps30.setStyle("-fx-border-color: #ff0000; -fx-border-width: 2px;");
+		fps15.setStyle(null);
+		fps45.setStyle(null);
+
 	}
 
 	public void speed45() {
 		WebCamPreviewController.speed = 16;
+		fps45.setStyle("-fx-border-color: #ff0000; -fx-border-width: 2px;");
+		fps15.setStyle(null);
+		fps30.setStyle(null);
 	}
 
 }

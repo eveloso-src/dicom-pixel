@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane fx:id="borderPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="690.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxml.controller.WebCamPreviewController">
@@ -119,13 +120,13 @@
                            <FlowPane.margin>
                               <Insets left="10.0" />
                            </FlowPane.margin></Slider>
-                        <Button mnemonicParsing="false" onAction="#speed15" text="15fps" />
-                        <Button mnemonicParsing="false" onAction="#speed30" text="30fps">
+                        <Button fx:id="fps15" mnemonicParsing="false" onAction="#speed15" text="15fps" />
+                        <Button fx:id="fps30" mnemonicParsing="false" onAction="#speed30" text="30fps">
                            <FlowPane.margin>
                               <Insets left="10.0" />
                            </FlowPane.margin>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#speed45" text="45fps">
+                        <Button fx:id="fps45" mnemonicParsing="false" onAction="#speed45" text="45fps">
                            <FlowPane.margin>
                               <Insets left="10.0" />
                            </FlowPane.margin>
@@ -157,6 +158,7 @@
                   <ImageView fx:id="imgWebCamCapturedImage" fitHeight="115.0" fitWidth="133.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.rowSpan="2" />
                   <ImageView fx:id="imgWebCamCapturedImage2" fitHeight="152.0" fitWidth="166.0" pickOnBounds="true" smooth="false" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
                   <ImageView fx:id="imgWebCamCapturedImage4" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1" />
+                  <ImageView fx:id="imgWebCamCapturedImage5" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2" />
                </children>
             </GridPane>
          </children>
@@ -165,7 +167,7 @@
    <left>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <Pane prefHeight="200.0" prefWidth="200.0">
+            <Pane fx:id="panePreview1" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <children>
                   <ImageView fx:id="imgPreview1" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#imgPreview1Clicked" pickOnBounds="true" preserveRatio="true" />
                </children>
@@ -179,7 +181,12 @@
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </VBox.margin>
             </Pane>
-            <Pane prefHeight="200.0" prefWidth="200.0">
+            <Line endX="100.0" startX="-100.0" stroke="#f7f5f5" strokeWidth="2.0" VBox.vgrow="NEVER">
+               <VBox.margin>
+                  <Insets top="2.0" />
+               </VBox.margin>
+            </Line>
+            <Pane fx:id="panePreview2" prefHeight="200.0" prefWidth="200.0">
                <children>
                   <ImageView fx:id="imgPreview2" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#imgPreview2Clicked" pickOnBounds="true" preserveRatio="true" />
                </children>
@@ -193,7 +200,12 @@
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </VBox.margin>
             </Pane>
-            <Pane prefHeight="200.0" prefWidth="200.0">
+            <Line endX="100.0" startX="-100.0" stroke="WHITE">
+               <VBox.margin>
+                  <Insets top="2.0" />
+               </VBox.margin>
+            </Line>
+            <Pane fx:id="panePreview3" prefHeight="200.0" prefWidth="200.0">
                <children>
                   <ImageView fx:id="imgPreview3" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#imgPreview3Clicked" pickOnBounds="true" preserveRatio="true" />
                </children>
@@ -207,9 +219,11 @@
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </VBox.margin>
             </Pane>
-            <Pane prefHeight="200.0" prefWidth="200.0">
+            <Line endX="100.0" startX="-100.0" stroke="WHITE" />
+            <Pane fx:id="panePreview4" prefHeight="200.0" prefWidth="200.0">
                <children>
                   <ImageView fx:id="imgPreview4" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#imgPreview4Clicked" pickOnBounds="true" preserveRatio="true" />
+                  <Line endX="100.0" startX="-100.0" stroke="WHITE" strokeType="INSIDE" />
                </children>
                <opaqueInsets>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
