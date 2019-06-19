@@ -28,9 +28,9 @@ public class ToGray {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				pixel[i][j] = raster.getSample(i, j, 0);
-				// pixelBW[i][j] = new Double(raster.getSample(i, j, 0) * 0.21 +
-				// raster.getSample(i, j, 1) * 0.71
-				// + raster.getSample(i, j, 2) * 0.07).byteValue();
+				 pixelBW[i][j] = new Double(raster.getSample(i, j, 0) * 0.21 +
+				 raster.getSample(i, j, 1) * 0.71
+				 + raster.getSample(i, j, 2) * 0.07).byteValue();
 			}
 		}
 		
@@ -55,18 +55,18 @@ public class ToGray {
 		
 		// retocar la imagen por bytes
 		int value = 255;
-//		for (int i = 0; i < width; i++) {
-//			for (int j = 0; j < height; j++) {
-//				value = pixel[i][j] << 16 | pixel[i][j] << 8 | pixel[i][j];
-//				if (i > 0) {
-//					value = value - (pixel[i - 1][j] << 16 | pixel[i - 1][j] << 8 | pixel[i - 1][j]);
-//				}
-//				if (i == 3 || j == 3) {
-//					value = 255 << 16 | 255 << 8 | 255;
-//				}
-//				theImage.setRGB(i, j, value);
-//			}
-//		}
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				value = pixel[i][j] << 16 | pixel[i][j] << 8 | pixel[i][j];
+				if (i > 0) {
+					value = value - (pixel[i - 1][j] << 16 | pixel[i - 1][j] << 8 | pixel[i - 1][j]);
+				}
+				if (i == 3 || j == 3) {
+					value = 255 << 16 | 255 << 8 | 255;
+				}
+				theImage.setRGB(i, j, value);
+			}
+		}
 
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat(AppLauncher.getProp("fileDateFormat") );
