@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -170,6 +171,7 @@
             <Pane fx:id="panePreview1" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <children>
                   <ImageView fx:id="imgPreview1" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#imgPreview1Clicked" pickOnBounds="true" preserveRatio="true" />
+                  <RadioButton fx:id="radioImg1" mnemonicParsing="false" onAction="#radioImg1Click" />
                </children>
                <opaqueInsets>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
@@ -189,6 +191,7 @@
             <Pane fx:id="panePreview2" prefHeight="200.0" prefWidth="200.0">
                <children>
                   <ImageView fx:id="imgPreview2" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#imgPreview2Clicked" pickOnBounds="true" preserveRatio="true" />
+                  <RadioButton fx:id="radioImg2" mnemonicParsing="false" onAction="#radioImg2Click" />
                </children>
                <opaqueInsets>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
@@ -208,6 +211,7 @@
             <Pane fx:id="panePreview3" prefHeight="200.0" prefWidth="200.0">
                <children>
                   <ImageView fx:id="imgPreview3" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#imgPreview3Clicked" pickOnBounds="true" preserveRatio="true" />
+                  <RadioButton fx:id="radioImg3" mnemonicParsing="false" onAction="#radioImg3Click" />
                </children>
                <opaqueInsets>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
@@ -223,6 +227,7 @@
             <Pane fx:id="panePreview4" prefHeight="200.0" prefWidth="200.0">
                <children>
                   <ImageView fx:id="imgPreview4" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#imgPreview4Clicked" pickOnBounds="true" preserveRatio="true" />
+                  <RadioButton fx:id="radioImg4" mnemonicParsing="false" onAction="#radioImg4Click" />
                   <Line endX="100.0" startX="-100.0" stroke="WHITE" strokeType="INSIDE" />
                </children>
                <opaqueInsets>

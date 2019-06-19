@@ -63,6 +63,16 @@ public class WebCamPreviewController implements Initializable {
 	javafx.scene.layout.Pane panePreview4;
 
 	@FXML
+	javafx.scene.control.RadioButton radioImg1;
+	@FXML
+	javafx.scene.control.RadioButton radioImg2;
+	@FXML
+	javafx.scene.control.RadioButton radioImg3;
+	@FXML
+	javafx.scene.control.RadioButton radioImg4;
+
+	
+	@FXML
 	Button btnStopCamera;
 	@FXML
 	Button btnDisposeCamera;
@@ -476,6 +486,40 @@ public class WebCamPreviewController implements Initializable {
 	public void imgPreview4Clicked(ActionEvent event) {
 		panePreview4.setStyle("-fx-border-color: #ff0000; -fx-border-width: 5px;");
 	}
+	public void radioImg1Click(ActionEvent event) {
+		System.out.println("radio 1");
+		this.radioImg1.setSelected(true);
+		this.radioImg2.setSelected(false);
+		this.radioImg3.setSelected(false);
+		this.radioImg4.setSelected(false);
+	}
+
+	
+	public void radioImg2Click(ActionEvent event) {
+		this.radioImg1.setSelected(false);
+		this.radioImg2.setSelected(true);
+		this.radioImg3.setSelected(false);
+		this.radioImg4.setSelected(false);
+		System.out.println("radio 2");
+	}
+
+	
+	public void radioImg3Click(ActionEvent event) {
+		this.radioImg1.setSelected(false);
+		this.radioImg2.setSelected(false);
+		this.radioImg3.setSelected(true);
+		this.radioImg4.setSelected(false);
+		System.out.println("radio 3");
+	}
+
+	public void radioImg4Click(ActionEvent event) {
+		System.out.println("radio 4");
+		this.radioImg1.setSelected(false);
+		this.radioImg2.setSelected(false);
+		this.radioImg3.setSelected(false);
+		this.radioImg4.setSelected(true);
+	}
+
 
 	public static void selectImgPreview1() {
 
