@@ -464,6 +464,7 @@ public class WebCamPreviewController implements Initializable {
 		panePreview1.setStyle("-fx-border-color: #ff0000; -fx-border-width: 5px;");
 	}
 
+	
 	public void imgPreview2Clicked(ActionEvent event) {
 		panePreview2.setStyle("-fx-border-color: #ff0000; -fx-border-width: 5px;");
 	}
