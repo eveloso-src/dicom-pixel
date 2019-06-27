@@ -54,6 +54,8 @@ public class WebCamPreviewController implements Initializable {
 	Button fps30;
 	@FXML
 	Button fps45;
+	@FXML
+	javafx.scene.control.CheckBox checkFilter1;
 
 	@FXML
 	javafx.scene.layout.Pane panePreview1;
@@ -119,6 +121,8 @@ public class WebCamPreviewController implements Initializable {
 	ImageView miniFrame;
 	@FXML
 	public Slider sliderFrame;
+	
+	public static boolean filter1Active = false;
 
 	public BufferedImage[] lBuffered;
 	public static int speed = 30;
@@ -154,6 +158,7 @@ public class WebCamPreviewController implements Initializable {
 	public void setLabelFPS(String value) {
 		labelFPS.setText(value);
 	}
+	
 
 	// @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -195,6 +200,15 @@ public class WebCamPreviewController implements Initializable {
 				setImageViewSize();
 			}
 		});
+		
+		checkFilter1.selectedProperty().addListener(new ChangeListener<Boolean>() {
+		    @Override
+		    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+//		        chk2.setSelected(!newValue);
+		    	WebCamPreviewController.filter1Active =  !WebCamPreviewController.filter1Active;
+		    }
+		});
+
 	}
 
 	protected void setImageViewSize() {
@@ -365,10 +379,7 @@ public class WebCamPreviewController implements Initializable {
 		});
 
 		sliderFrame.setOnMouseClicked((event) -> {
-			// tslider.cancel();
 			TaskCamera.autoPlay = !TaskCamera.autoPlay;
-			if (TaskCamera.autoPlay) {
-			}
 		});
 
 		tslider = new ThreadSlider(sliderFrame, this);
@@ -469,6 +480,10 @@ public class WebCamPreviewController implements Initializable {
 		th.start();
 	}
 
+	public void stopClick(ActionEvent event) {
+		TaskCamera.autoPlay = !TaskCamera.autoPlay;
+	}
+		
 	public void backPlayClick(ActionEvent event) {
 		TaskCamera.autoPlay = true;
 		Task task = new ThreadBack(aqImagenes, sliderFrame, imageProperty3);
@@ -513,6 +528,7 @@ public class WebCamPreviewController implements Initializable {
 		for (int pos = 0; pos < radioList.size(); pos++) {
 			radioList.get(pos).setSelected(pos == i - 1);
 		}
+		
 	}
 
 	public static void selectImgPreview1() {

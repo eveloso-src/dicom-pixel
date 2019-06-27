@@ -96,14 +96,18 @@ public class TaskCamera extends Task<Void> {
 					executor.submit(new Runnable() {
 						// @Override
 						public void run() {
-							final Image mainiamge = SwingFXUtils.toFXImage(grabbedImage, null);
-							final Image mainiamge2 = SwingFXUtils.toFXImage(bwImage, null);
-							final Image mainiamge3 = SwingFXUtils.toFXImage(bwImage2, null);
-							final Image mainiamge4 = SwingFXUtils.toFXImage(bwImage2, null);
-							imageProperty.set(mainiamge);
-							imageProperty2.set(mainiamge2);
-							imageProperty3.set(mainiamge3);
-							imageProperty4.set(mainiamge4);
+							imageProperty.set(SwingFXUtils.toFXImage(grabbedImage, null));
+							if (WebCamPreviewController.filter1Active) {
+								
+								imageProperty2.set(SwingFXUtils.toFXImage(bwImage, null));
+							}
+							else {
+								imageProperty2.set(SwingFXUtils.toFXImage(bwImage2, null));
+									
+							}
+								
+							imageProperty3.set(SwingFXUtils.toFXImage(bwImage2, null));
+							imageProperty4.set(SwingFXUtils.toFXImage(bwImage2, null));
 						}
 					});
 
