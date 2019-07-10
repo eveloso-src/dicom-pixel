@@ -1,16 +1,21 @@
 package fxml.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import laucher.AppLauncher;
 
 public class WindowUtil {
 
-	public void openWindows(ImageView imgWebCamCapturedImage2, ImageView imgWebCamCapturedImage3, ImageView imgWebCamCapturedImage4, ImageView imgWebCamCapturedImage5) {
+	public List<Stage> openWindows(ImageView imgWebCamCapturedImage2, ImageView imgWebCamCapturedImage3,
+			ImageView imgWebCamCapturedImage4, ImageView imgWebCamCapturedImage5, String configName) {
 
 		FXMLLoader load = new FXMLLoader();
 		FXMLLoader load2 = new FXMLLoader();
@@ -22,43 +27,42 @@ public class WindowUtil {
 		load3.setLocation(getClass().getResource("/fxml/gui/window.fxml"));
 		load4.setLocation(getClass().getResource("/fxml/gui/window.fxml"));
 
+		List<Stage> result = new ArrayList<Stage>();
+
+		result.add(createWindow(imgWebCamCapturedImage2, 1, configName));
+		result.add(createWindow(imgWebCamCapturedImage3, 2, configName));
+		result.add(createWindow(imgWebCamCapturedImage4, 3, configName));
+		result.add(createWindow(imgWebCamCapturedImage5, 4, configName));
+		return result;
+
+	}
+
+	private Stage createWindow(ImageView imgWebCam, int i, String configName) {
+
 		Stage stage = new Stage();
-		stage.setTitle("Monitor 1");
+		stage.setTitle("Monitor " + i);
 		javafx.scene.layout.StackPane secondaryLayout = new javafx.scene.layout.StackPane();
 		BorderPane pane = new BorderPane();
-		pane.setCenter(imgWebCamCapturedImage2);
+		pane.setCenter(imgWebCam);
 		stage.setScene(new Scene(secondaryLayout, 450, 450));
 
-		secondaryLayout.getChildren().add(imgWebCamCapturedImage2);
+//		quita barra superior
+//		stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
 
-		imgWebCamCapturedImage2.fitWidthProperty().bind(secondaryLayout.widthProperty());
+		fxml.controller.handler.MousePressedHandler value = new fxml.controller.handler.MousePressedHandler(stage);
+		secondaryLayout.setOnMousePressed(value);
+
+		secondaryLayout.setOnMouseDragged(new fxml.controller.handler.MouseDraggedHandler(stage));
+		secondaryLayout.getChildren().add(imgWebCam);
+		imgWebCam.fitWidthProperty().bind(secondaryLayout.widthProperty());
 		stage.initModality(javafx.stage.Modality.NONE);
 		stage.show();
+		javafx.geometry.Rectangle2D primScreenBounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+		stage.setX(Double.valueOf(AppLauncher.getProp(configName + ".monitor" + i + ".x"))); // primScreenBounds.getWidth() - stage4.getWidth()) / 2);
+		stage.setY(Double.valueOf(AppLauncher.getProp(configName + ".monitor" + i + ".y"))); // (primScreenBounds.getHeight() - stage4.getHeight()) /
+																// 2);
 
-		Stage stage2 = new Stage();
-		stage2.setTitle("Monitor 2");
-		javafx.scene.layout.StackPane secondaryLayout2 = new javafx.scene.layout.StackPane();
-		secondaryLayout2.getChildren().add(imgWebCamCapturedImage3);
-		stage2.setScene(new Scene(secondaryLayout2, 450, 450));
-		stage2.initModality(javafx.stage.Modality.NONE);
-		stage2.show();
-		
-		Stage stage3 = new Stage();
-		stage3.setTitle("Monitor 3");
-		javafx.scene.layout.StackPane secondaryLayout3 = new javafx.scene.layout.StackPane();
-		secondaryLayout3.getChildren().add(imgWebCamCapturedImage4);
-		stage3.setScene(new Scene(secondaryLayout3, 450, 450));
-		stage3.initModality(javafx.stage.Modality.NONE);
-		stage3.show();
-
-		Stage stage4 = new Stage();
-		stage4.setTitle("Monitor 4");
-		javafx.scene.layout.StackPane secondaryLayout4 = new javafx.scene.layout.StackPane();
-		secondaryLayout4.getChildren().add(imgWebCamCapturedImage5);
-		stage4.setScene(new Scene(secondaryLayout4, 450, 450));
-		stage4.initModality(javafx.stage.Modality.NONE);
-		stage4.show();
-		
+		return stage;
 	}
 
 	public static void configureSmallPreview(List<ImageView> listPreview, double height, double width) {
@@ -100,6 +104,14 @@ public class WindowUtil {
 			imgWebCamCapturedImage2.setPreserveRatio(true);
 		}
 
+	}
+
+	public static ObservableList<String> getConfig() {
+		ObservableList<String> options = FXCollections.observableArrayList();
+
+		options.add("default");
+
+		return options;
 	}
 
 }

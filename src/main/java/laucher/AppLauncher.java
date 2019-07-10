@@ -1,25 +1,27 @@
 package laucher;
 
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
-import javafx.scene.input.KeyCode;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+
 import fxml.controller.WebCamPreviewController;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.BooleanProperty;
 import javafx.application.Application;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class AppLauncher extends Application {
@@ -93,6 +95,20 @@ public class AppLauncher extends Application {
 
 	}
 
+	public static void setProp(String propName, String value) {
+		String file = "src/main/resources/params.properties";
+		PropertiesConfiguration prop;
+		try {
+			prop = new PropertiesConfiguration(file);
+			prop.setProperty(propName, value);
+			prop.save();
+		} catch (ConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
 	public static String getProp(String propName) {
 		Properties prop = new Properties();
 		String value = null;
@@ -104,6 +120,7 @@ public class AppLauncher extends Application {
 
 			// get the property value and print it out
 			value = prop.getProperty(propName);
+			prop.clear();
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
