@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.github.sarxos.webcam.Webcam;
 
 import javafx.application.Platform;
@@ -71,7 +73,6 @@ public class WebCamPreviewController implements Initializable {
 	javafx.scene.control.RadioButton radioImg3;
 	@FXML
 	javafx.scene.control.RadioButton radioImg4;
-
 	@FXML
 	Button btnStopCamera;
 	@FXML
@@ -80,28 +81,20 @@ public class WebCamPreviewController implements Initializable {
 	ComboBox<WebCamInfo> cbCameraOptions;
 	@FXML
 	BorderPane bpWebCamPaneHolder;
-	// @FXML
-	// FlowPane fpBottomPane;
 	@FXML
 	ImageView imgWebCamCapturedImage;
-
 	@FXML
 	javafx.scene.control.Label labelFPS;
-
 	@FXML
 	javafx.scene.control.ComboBox<String> comboSpeed;
-
 	@FXML
 	ImageView imgWebCamCapturedImage2;
 	@FXML
 	ImageView imgWebCamCapturedImage3;
-
 	@FXML
 	ImageView imgWebCamCapturedImage4;
-
 	@FXML
 	ImageView imgWebCamCapturedImage5;
-
 	@FXML
 	ImageView imgPreview1;
 	@FXML
@@ -110,10 +103,8 @@ public class WebCamPreviewController implements Initializable {
 	ImageView imgPreview3;
 	@FXML
 	ImageView imgPreview4;
-
 	@FXML
 	ImageView video1;
-
 	@FXML
 	ImageView miniFrame;
 	@FXML
@@ -263,7 +254,8 @@ public class WebCamPreviewController implements Initializable {
 		// fpBottomPane.setDisable(false);
 		btnStartCamera.setDisable(true);
 
-		System.out.println("this.cmbConfig.getSelectionModel().getSelectedItem() " + this.cmbConfig.getSelectionModel().getSelectedItem());
+		System.out.println("this.cmbConfig.getSelectionModel().getSelectedItem() "
+				+ this.cmbConfig.getSelectionModel().getSelectedItem());
 		windows = new WindowUtil().openWindows(imgWebCamCapturedImage2, imgWebCamCapturedImage3,
 				imgWebCamCapturedImage4, imgWebCamCapturedImage5, this.cmbConfig.getSelectionModel().getSelectedItem());
 	}
@@ -561,20 +553,19 @@ public class WebCamPreviewController implements Initializable {
 	}
 
 	public void clickComo() {
-
-//		cmbConfig.getSelectionModel().getSelectedItem() + 
 		String newConfig = txtComo.getText();
-		cmbConfig.getItems().add(newConfig);
-		cmbConfig.setValue(newConfig);
-		clickGuardar();
-		
+		if (!StringUtils.isEmpty(newConfig)) {
+			cmbConfig.getItems().add(newConfig);
+			cmbConfig.setValue(newConfig);
+			clickGuardar();
+		}
 	}
 
 	public void clickGuardar() {
-
+		String item = cmbConfig.getSelectionModel().getSelectedItem();
 		for (int i = 1; i < 5; i++) {
-			AppLauncher.setProp(cmbConfig.getSelectionModel().getSelectedItem() + ".monitor" + i + ".x", String.valueOf(windows.get(i - 1).getX()));
-			AppLauncher.setProp(cmbConfig.getSelectionModel().getSelectedItem() + ".monitor" + i + ".y", String.valueOf(windows.get(i - 1).getY()));
+			AppLauncher.setProp(item + ".monitor" + i + ".x", String.valueOf(windows.get(i - 1).getX()));
+			AppLauncher.setProp(item + ".monitor" + i + ".y", String.valueOf(windows.get(i - 1).getY()));
 		}
 	}
 
