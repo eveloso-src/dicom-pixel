@@ -119,7 +119,7 @@ public class TaskCamera extends Task<Void> {
 					}
 				}
 				else {
-					System.out.println("false");
+//					System.out.println("false");
 				}
 			} catch (Exception e) {
 			}
