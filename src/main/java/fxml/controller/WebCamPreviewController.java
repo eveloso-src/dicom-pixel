@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.github.sarxos.webcam.Webcam;
 
+import fxml.entity.Configuracion;
 import fxml.entity.WebCamInfo;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -55,7 +56,8 @@ public class WebCamPreviewController implements Initializable {
 	Button fps45;
 	@FXML
 	javafx.scene.control.CheckBox checkFilter1;
-
+	@FXML
+	javafx.scene.control.CheckBox checkFilter2;
 	@FXML
 	javafx.scene.layout.Pane panePreview1;
 	@FXML
@@ -127,7 +129,7 @@ public class WebCamPreviewController implements Initializable {
 	private CapturedImage[] arrayImg;
 	private Webcam selWebCam = null;
 
-	private List<javafx.scene.control.RadioButton> radioList = new ArrayList<javafx.scene.control.RadioButton>();
+	private List<Configuracion> monitorList = new ArrayList<Configuracion>();
 	private Webcam webcamDefault = Webcam.getDefault();
 
 	private boolean stopCamera = false;
@@ -147,10 +149,10 @@ public class WebCamPreviewController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		this.cmbConfig.setItems(WindowUtil.getConfig());
 		cmbConfig.getSelectionModel().selectFirst();
-		radioList.add(radioImg1);
-		radioList.add(radioImg2);
-		radioList.add(radioImg3);
-		radioList.add(radioImg4);
+		monitorList.add(new Configuracion(radioImg1));
+		monitorList.add(new Configuracion(radioImg2));
+		monitorList.add(new Configuracion(radioImg3));
+		monitorList.add(new Configuracion(radioImg4));
 		options = FXCollections.observableArrayList();
 		int webCamCounter = 0;
 		for (Webcam webcam : Webcam.getWebcams()) {
@@ -168,13 +170,11 @@ public class WebCamPreviewController implements Initializable {
 				setImageViewSize();
 			}
 		});
+		
+		this.radioImg1.setSelected(true);
 
-		checkFilter1.selectedProperty().addListener(new ChangeListener<Boolean>() {
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				WebCamPreviewController.filter1Active = !WebCamPreviewController.filter1Active;
-			}
-		});
+		checkFilter1.selectedProperty().addListener(new MonitorListener(checkFilter1, checkFilter2, monitorList));
+		checkFilter2.selectedProperty().addListener(new MonitorListener(checkFilter1, checkFilter2, monitorList));
 	}
 
 	protected void setImageViewSize() {
@@ -271,7 +271,6 @@ public class WebCamPreviewController implements Initializable {
 		btnStartCamera.setDisable(true);
 		btnStopCamera.setDisable(false);
 	}
-
 
 	public void createSlider(final ArrayDeque<BufferedImage> imagenes) {
 		// play images
@@ -449,10 +448,15 @@ public class WebCamPreviewController implements Initializable {
 	}
 
 	private void selectRadio(int i) {
-		for (int pos = 0; pos < radioList.size(); pos++) {
-			radioList.get(pos).setSelected(pos == i - 1);
+		Configuracion configMonitor;
+		for (int pos = 0; pos < monitorList.size(); pos++) {
+			configMonitor = monitorList.get(pos);
+			configMonitor.getRadio().setSelected(pos == i - 1);
+			if (pos == i - 1) {
+				this.checkFilter1.setSelected(configMonitor.getFilter1() == 1);
+				this.checkFilter2.setSelected(configMonitor.getFilter2() == 1);
+			}
 		}
-
 	}
 
 	public static void selectImgPreview1() {
