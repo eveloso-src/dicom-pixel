@@ -37,6 +37,7 @@ import laucher.AppLauncher;
 
 @SuppressWarnings("restriction")
 public class WebCamPreviewController implements Initializable {
+	public static final String CONFIG_LAST_MONITOR = "config.last.monitor";
 
 	@FXML
 	Button btnStartCamera;
@@ -170,7 +171,7 @@ public class WebCamPreviewController implements Initializable {
 				setImageViewSize();
 			}
 		});
-		
+
 		this.radioImg1.setSelected(true);
 
 		checkFilter1.selectedProperty().addListener(new MonitorListener(checkFilter1, checkFilter2, monitorList));
@@ -299,6 +300,17 @@ public class WebCamPreviewController implements Initializable {
 			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
 				imageProperty.set(SwingFXUtils.toFXImage(listImg[new_val.intValue()], null));
 			}
+		});
+
+		this.cmbConfig.valueProperty().addListener(new ChangeListener<String>() {
+
+			@Override
+			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
+				String value = cmbConfig.getValue();
+//				for(int i=0; i)
+//				AppLauncher.getProp("config." + value + ".monitor." + i );
+			}
+
 		});
 
 		sliderFrame.setOnMouseClicked((event) -> {
@@ -497,10 +509,13 @@ public class WebCamPreviewController implements Initializable {
 
 	public void clickGuardar() {
 		String item = cmbConfig.getSelectionModel().getSelectedItem();
+		String value;
 		for (int i = 1; i < 5; i++) {
-			AppLauncher.setProp(item + ".monitor" + i + ".x", String.valueOf(windows.get(i - 1).getX()));
-			AppLauncher.setProp(item + ".monitor" + i + ".y", String.valueOf(windows.get(i - 1).getY()));
+			value = String.valueOf(windows.get(i - 1).getX()) + "." + String.valueOf(windows.get(i - 1).getY());
+			AppLauncher.setProp("config." + item + ".monitor." + i, value);
 		}
+
+		AppLauncher.setProp(CONFIG_LAST_MONITOR, item);
 	}
 
 }
