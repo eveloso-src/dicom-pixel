@@ -517,5 +517,9 @@ public class WebCamPreviewController implements Initializable {
 
 		AppLauncher.setProp(CONFIG_LAST_MONITOR, item);
 	}
+	
+	public void cargarConfig() {
+		
+	}
 
 }
