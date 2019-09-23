@@ -1,7 +1,11 @@
 package fxml.controller;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -58,9 +62,11 @@ public class WindowUtil {
 		stage.initModality(javafx.stage.Modality.NONE);
 		stage.show();
 		javafx.geometry.Rectangle2D primScreenBounds = javafx.stage.Screen.getPrimary().getVisualBounds();
-		stage.setX(Double.valueOf(AppLauncher.getProp(configName + ".monitor" + i + ".x"))); // primScreenBounds.getWidth() - stage4.getWidth()) / 2);
-		stage.setY(Double.valueOf(AppLauncher.getProp(configName + ".monitor" + i + ".y"))); // (primScreenBounds.getHeight() - stage4.getHeight()) /
-																// 2);
+		String valueLine = AppLauncher.getProp("config." + configName + ".monitor." + i );
+		StringTokenizer st = new StringTokenizer(valueLine, ";");
+		stage.setX(Double.valueOf(st.nextToken())); // primScreenBounds.getWidth()
+		stage.setY(Double.valueOf(st.nextToken())); 											// - stage4.getWidth())
+																								// / 2);
 
 		return stage;
 	}
@@ -109,9 +115,77 @@ public class WindowUtil {
 	public static ObservableList<String> getConfig() {
 		ObservableList<String> options = FXCollections.observableArrayList();
 
-		options.add("default");
+		List<String> otherConfigs = WindowUtil.retrieveConfigs();
+		for (String conf : otherConfigs) {
+			options.add(conf);
+		}
+
+		String lastConfig = AppLauncher.getProp(WebCamPreviewController.CONFIG_LAST_MONITOR);
+//		options.add(lastConfig);
 
 		return options;
 	}
 
+	private static List<String> retrieveConfigs() {
+
+		List<String> configs = new ArrayList<String>();
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader(AppLauncher.PROPERTIES_FILE));
+			String line = reader.readLine();
+			StringTokenizer st;
+			String token;
+
+			configs.add("default");
+
+			while (line != null) {
+				if (line.startsWith("config.")) {
+					st = new StringTokenizer(line, ".");
+					st.nextToken();
+					token = st.nextToken();
+					if (!configs.contains(token)) {
+						
+						configs.add(token);
+					}
+				}
+				line = reader.readLine();
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return configs;
+	}
+
+	
+	private static List<String> retrieveConfigDetails(String configName) {
+
+		List<String> configs = new ArrayList<String>();
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader(AppLauncher.PROPERTIES_FILE));
+			String line = reader.readLine();
+			StringTokenizer st;
+			String tokenX;
+			String monit;
+
+
+			while (line != null) {
+				if (line.startsWith("config." + configName )) {
+					st = new StringTokenizer(line, ";");
+					st.nextToken(); //config
+					st.nextToken(); //default
+					st.nextToken(); //monitor
+					monit = st.nextToken(); // 1
+					tokenX = st.nextToken(); // x
+					
+				}
+				line = reader.readLine();
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return configs;
+	}
 }

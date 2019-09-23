@@ -25,6 +25,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class AppLauncher extends Application {
+	public static final String PROPERTIES_FILE = "src/main/resources/params.properties";
 
 	@SuppressWarnings("restriction")
 	@Override
@@ -96,10 +97,9 @@ public class AppLauncher extends Application {
 	}
 
 	public static void setProp(String propName, String value) {
-		String file = "src/main/resources/params.properties";
 		PropertiesConfiguration prop;
 		try {
-			prop = new PropertiesConfiguration(file);
+			prop = new PropertiesConfiguration(PROPERTIES_FILE);
 			prop.setProperty(propName, value);
 			prop.save();
 		} catch (ConfigurationException e) {
@@ -113,7 +113,7 @@ public class AppLauncher extends Application {
 		Properties prop = new Properties();
 		String value = null;
 		try {
-			InputStream input = new FileInputStream("src/main/resources/params.properties");
+			InputStream input = new FileInputStream(PROPERTIES_FILE);
 
 			// load a properties file
 			prop.load(input);
