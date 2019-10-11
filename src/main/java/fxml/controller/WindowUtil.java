@@ -64,9 +64,11 @@ public class WindowUtil {
 		javafx.geometry.Rectangle2D primScreenBounds = javafx.stage.Screen.getPrimary().getVisualBounds();
 		String valueLine = AppLauncher.getProp("config." + configName + ".monitor." + i );
 		StringTokenizer st = new StringTokenizer(valueLine, ";");
+		
 		stage.setX(Double.valueOf(st.nextToken())); // primScreenBounds.getWidth()
 		stage.setY(Double.valueOf(st.nextToken())); 											// - stage4.getWidth())
-																								// / 2);
+								
+		// / 2);
 
 		return stage;
 	}

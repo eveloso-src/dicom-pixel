@@ -19,9 +19,9 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="borderPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="690.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxml.controller.WebCamPreviewController">
+<BorderPane fx:id="borderPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="690.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxml.controller.WebCamPreviewController">
   <top>
-    <GridPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" style="-fx-background-color:#ccc;&#10;">
+    <GridPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="39.0" prefWidth="1806.0" style="-fx-background-color:#ccc;&#10;">
       <children>
             <GridPane prefHeight="57.0" prefWidth="224.0">
               <columnConstraints>
@@ -30,19 +30,9 @@
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label alignment="CENTER" text="FPS" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                     <font>
-                        <Font name="Segoe UI" size="12.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets right="10.0" />
-                     </GridPane.margin>
-                  </Label>
                   <Label fx:id="labelFPS" layoutX="142.0" layoutY="47.0" />
-                  <Label fx:id="labelFPS" prefHeight="18.0" prefWidth="90.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
               <Button fx:id="btnStartCamera" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#startCamera" prefHeight="28.0" prefWidth="78.0" text="Grabar" textAlignment="CENTER" GridPane.halignment="RIGHT">
                 <font>
                   <Font name="Segoe UI" size="12.0" fx:id="x1" />
@@ -71,10 +61,20 @@
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
+               <children>
+                  <Label alignment="CENTER" text="FPS" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Segoe UI" size="12.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets right="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="labelFPS" prefHeight="18.0" prefWidth="90.0" GridPane.columnIndex="1" />
+               </children>
             </GridPane>
-            <GridPane prefHeight="80.0" prefWidth="751.0" GridPane.columnIndex="2">
+            <GridPane prefHeight="55.0" prefWidth="970.0" GridPane.columnIndex="2">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="480.0" minWidth="10.0" prefWidth="128.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="846.0" minWidth="10.0" prefWidth="138.0" />
@@ -82,7 +82,6 @@
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="846.0" minWidth="10.0" prefWidth="453.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
@@ -93,17 +92,17 @@
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#clickComo" text="Guardar como..." GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <Button mnemonicParsing="false" onAction="#clickComo" text="Guardar como..." GridPane.columnIndex="3">
                      <GridPane.margin>
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Button>
-                  <TextField fx:id="txtComo" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <TextField fx:id="txtComo" GridPane.columnIndex="3">
                      <GridPane.margin>
                         <Insets left="120.0" />
                      </GridPane.margin>
                   </TextField>
-                  <Button mnemonicParsing="false" onAction="#cargarConfig" text="Cargar Conf" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button mnemonicParsing="false" onAction="#cargarConfig" text="Cargar Conf" />
                </children>
             </GridPane>
         
@@ -125,72 +124,23 @@
    <center>
       <Pane BorderPane.alignment="CENTER">
          <children>
-            <GridPane layoutX="-122.0" layoutY="82.0" prefHeight="486.0" prefWidth="915.0">
+            <GridPane layoutX="-89.0" layoutY="-2.0" prefHeight="512.0" prefWidth="915.0">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="302.0" minWidth="10.0" prefWidth="302.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="525.0" minWidth="10.0" prefWidth="488.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="129.0" minWidth="10.0" prefWidth="125.0" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints maxHeight="181.0" minHeight="10.0" prefHeight="93.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="296.0" minHeight="10.0" prefHeight="291.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="175.0" minHeight="10.0" prefHeight="102.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <FlowPane prefHeight="103.0" prefWidth="414.0" GridPane.columnIndex="1">
-                     <children>
-                        <Slider fx:id="sliderFrame" blockIncrement="1.0" majorTickUnit="100.0" minorTickCount="1" prefHeight="38.0" prefWidth="444.0" showTickLabels="true" showTickMarks="true" snapToTicks="true">
-                           <FlowPane.margin>
-                              <Insets left="10.0" />
-                           </FlowPane.margin></Slider>
-                        <Button fx:id="fps15" mnemonicParsing="false" onAction="#speed15" text="15fps" />
-                        <Button fx:id="fps30" mnemonicParsing="false" onAction="#speed30" text="30fps">
-                           <FlowPane.margin>
-                              <Insets left="10.0" />
-                           </FlowPane.margin>
-                        </Button>
-                        <Button fx:id="fps45" mnemonicParsing="false" onAction="#speed45" text="45fps">
-                           <FlowPane.margin>
-                              <Insets left="10.0" />
-                           </FlowPane.margin>
-                        </Button>
-                        <Button fx:id="backBtn" mnemonicParsing="false" onAction="#backClick" text="&lt;">
-                           <FlowPane.margin>
-                              <Insets left="10.0" right="10.0" />
-                           </FlowPane.margin>
-                        </Button>
-                        <Button fx:id="fwdBtn" mnemonicParsing="false" onAction="#fwdClick" text="&gt;" />
-                        <Button fx:id="backPlay" mnemonicParsing="false" onAction="#backPlayClick" text="&lt; Play ">
-                           <FlowPane.margin>
-                              <Insets left="10.0" />
-                           </FlowPane.margin>
-                        </Button>
-                        <Button mnemonicParsing="false" onAction="#stopClick" text="Stop">
-                           <FlowPane.margin>
-                              <Insets left="10.0" />
-                           </FlowPane.margin>
-                        </Button>
-                        <Button fx:id="playBtn" mnemonicParsing="false" onAction="#playBtnClick" text="Play &gt;">
-                           <FlowPane.margin>
-                              <Insets left="10.0" />
-                           </FlowPane.margin>
-                        </Button>
-                        <Label fx:id="imgCounter">
-                           <FlowPane.margin>
-                              <Insets left="10.0" />
-                           </FlowPane.margin>
-                        </Label>
-                     </children>
-                  </FlowPane>
                   <ImageView fx:id="imgWebCamCapturedImage3" fitHeight="131.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fx:id="imgWebCamCapturedImage" fitHeight="115.0" fitWidth="133.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.rowSpan="2" />
                   <ImageView fx:id="imgWebCamCapturedImage2" fitHeight="152.0" fitWidth="166.0" pickOnBounds="true" smooth="false" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
                   <ImageView fx:id="imgWebCamCapturedImage4" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1" />
-                  <ImageView fx:id="imgWebCamCapturedImage5" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2" />
+                  <ImageView fx:id="imgWebCamCapturedImage5Main" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="TOP" />
                </children>
             </GridPane>
-            <CheckBox fx:id="checkFilter1" layoutX="197.0" layoutY="38.0" mnemonicParsing="false" text="filtro 1" />
-            <CheckBox fx:id="checkFilter2" layoutX="277.0" layoutY="38.0" mnemonicParsing="false" text="filtro 2" />
          </children>
       </Pane>
    </center>
@@ -272,4 +222,54 @@
          </children>
       </VBox>
    </left>
+   <right>
+      <FlowPane prefHeight="551.0" prefWidth="638.0" BorderPane.alignment="CENTER">
+         <children>
+            <Slider fx:id="sliderFrame" blockIncrement="1.0" majorTickUnit="100.0" minorTickCount="1" prefHeight="38.0" prefWidth="444.0" showTickLabels="true" showTickMarks="true" snapToTicks="true">
+               <FlowPane.margin>
+                  <Insets left="10.0" />
+               </FlowPane.margin>
+            </Slider>
+            <Button fx:id="fps15" mnemonicParsing="false" onAction="#speed15" text="15fps" />
+            <Button fx:id="fps30" mnemonicParsing="false" onAction="#speed30" text="30fps">
+               <FlowPane.margin>
+                  <Insets left="10.0" />
+               </FlowPane.margin>
+            </Button>
+            <Button fx:id="fps45" mnemonicParsing="false" onAction="#speed45" text="45fps">
+               <FlowPane.margin>
+                  <Insets left="10.0" />
+               </FlowPane.margin>
+            </Button>
+            <Button fx:id="backBtn" mnemonicParsing="false" onAction="#backClick" text="&lt;">
+               <FlowPane.margin>
+                  <Insets left="10.0" right="10.0" />
+               </FlowPane.margin>
+            </Button>
+            <Button fx:id="fwdBtn" mnemonicParsing="false" onAction="#fwdClick" text="&gt;" />
+            <Button fx:id="backPlay" mnemonicParsing="false" onAction="#backPlayClick" text="&lt; Play ">
+               <FlowPane.margin>
+                  <Insets left="10.0" />
+               </FlowPane.margin>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#stopClick" text="Stop">
+               <FlowPane.margin>
+                  <Insets left="10.0" />
+               </FlowPane.margin>
+            </Button>
+            <Button fx:id="playBtn" mnemonicParsing="false" onAction="#playBtnClick" text="Play &gt;">
+               <FlowPane.margin>
+                  <Insets left="10.0" />
+               </FlowPane.margin>
+            </Button>
+            <Label fx:id="imgCounter">
+               <FlowPane.margin>
+                  <Insets left="10.0" />
+               </FlowPane.margin>
+            </Label>
+            <CheckBox fx:id="checkFilter1" mnemonicParsing="false" text="filtro 1" />
+            <CheckBox fx:id="checkFilter2" mnemonicParsing="false" text="filtro 2" />
+         </children>
+      </FlowPane>
+   </right>
 </BorderPane>

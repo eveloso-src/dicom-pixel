@@ -1,0 +1,288 @@
+<project name="dicom4j-0.0.9a" default="dist" basedir=".">
+
+  <!-- external definitions -->
+  <property file="build.properties"/>
+  <property file="lib.properties"/>
+
+  <path id="class.path">
+    <pathelement path="${src}"/>
+    <pathelement path="${build}"/>
+    <pathelement path="${lib}"/>
+    <pathelement location="${lib}/${lib.name.backport-util-concurrent}"/>
+  	<pathelement location="${lib}/${lib.name.commons-collections}"/> 
+  	<pathelement location="${lib}/${lib.name.commons-io}"/> 
+    <pathelement location="${lib}/${lib.name.commons-lang}"/> 
+    <pathelement location="${lib}/${lib.name.dolmen}"/>
+  	<pathelement location="${lib}/${lib.name.log4j}"/> 
+    <pathelement location="${lib}/${lib.name.mina.core}"/> 
+  	<pathelement location="${lib}/${lib.name.slf4j}"/> 
+
+  	<pathelement location="${lib}/junit/junit.jar"/>
+    <pathelement location="${java.home}/jre/lib/rt.jar"/>
+  </path>
+  
+  <!-- Compile the main sources -->
+  <target name="build_main">
+    <mkdir dir="${build.main}"/>
+    <javac source="1.5" srcdir="${src.main.java}" destdir="${build.main}" includes="**" debug="off">
+        <classpath refid="class.path"/>
+    </javac>
+  </target>
+   
+<target name="build_samples">
+  <mkdir dir="${build.samples}"/>
+  <javac source="1.5" srcdir="${src.samples.java}" destdir="${build.samples}" includes="**" debug="off">
+      <classpath refid="class.path"/>
+    	<classpath>
+  	      <pathelement path="${build.main}"/>
+    	</classpath>
+  </javac>
+</target>
+    	
+  <target name="build_mock" depends="build_main">
+    <mkdir dir="${build.mock}"/>
+  	<javac source="1.5" srcdir="${src.mock.java}" destdir="${build.mock}" includes="**" debug="off">
+      <classpath refid="class.path"/>
+    	<classpath>
+  	      <pathelement path="${build.main}"/>
+    	</classpath>
+   	</javac>
+  </target>
+    	
+  <target name="build_test" depends="build_main, build_mock">
+    <mkdir dir="${build.test}"/>
+    <javac source="1.5" srcdir="${src.test.java}" destdir="${build.test}" includes="**" debug="off">
+      <classpath refid="class.path"/>
+    	<classpath>
+  	      <pathelement path="${build.main}"/>
+    	    <pathelement path="${build.mock}"/>
+    	</classpath>
+    </javac>
+  </target>
+	
+<target name="build_all" depends="build_main, build_test, build_mock, build_samples"/>
+  
+  <target name="test_main" depends="build_test">
+     <mkdir dir="${dist.reports.test.main}"/>
+     <mkdir dir="${dist.reports.test.main}/xml"/>
+     <junit printsummary="true">
+        <classpath refid="class.path"/>
+    	  <classpath>
+  	      <pathelement path="${build.main}"/>
+  	      <pathelement path="${build.mock}"/>
+     	  	<pathelement path="${build.test}"/>
+    	  </classpath>
+        <formatter type="xml"/>
+      <batchtest fork="yes" todir="${dist.reports.test.main}/xml">
+        <fileset dir="${src.test.java}">
+          <include name="**/*Test*.java"/>
+          <exclude name="**/AllTests.java"/>
+          <exclude name="**/TestDicom4J.java"/>
+        <exclude name="**/AbstractTestCase.java"/>
+        </fileset>
+      </batchtest>
+	  </junit>
+     <junitreport todir="${dist.reports.test.main}">
+        <fileset dir="${dist.reports.test.main}/xml" includes="TEST-*.xml"/>
+        <report format="frames" todir="${dist.reports.test.main}"/>
+     </junitreport>
+  </target>
+  
+  <target name="docs_main">
+    <mkdir dir="${dist.docs.api}"/>
+    <javadoc 
+    	packagenames="org.dicom4j.*"
+    	source="5.0"
+    	Public="true"
+    	Version="true"
+    	Author="true"
+    	Use="true"
+    	stylesheetfile="${basedir}/docs/javadoc/stylesheet.css"
+      destdir="${dist.docs.api}"
+    	windowtitle="${release.name} API Documentation, version: ${release.version}"
+  	>
+      <bottom><![CDATA[<i>Copyright &#169; 2009 dicom4j. All Rights Reserved.</i>]]></bottom>
+ 	    <link href="http://java.sun.com/j2se/1.5.0/docs/api"/>
+    	<classpath refid="class.path"/>
+      <packageset dir="${src.main.java}"/>
+      <group title="Core (internal package)" packages="org.dicom4j.core*"/>
+      <group title="Dicom" packages="org.dicom4j.dicom*"/>
+    	<group title="Dicom dictionary" packages="org.dicom4j.dicom.dictionary*"/>
+      <group title="Data (cover PS 3.5)" packages="org.dicom4j.data*"/>
+    	<group title="I/O" packages="org.dicom4j.io*"/>
+			<group title="Network (cover PS 3.8 and 3.7)" packages="org.dicom4j.network*"/>
+    </javadoc>
+  	<copy todir="${dist.docs}/manual">
+      <fileset dir="${basedir}/docs/manual"/>
+    </copy>	
+  </target>
+	
+	<target name="docs_all" depends="docs_main">
+    <copy todir="${dist.docs}/manual">
+      <fileset dir="${basedir}/docs/manual"/>
+    </copy>	
+	</target>
+
+
+<target name="jar_main" depends="build_main">
+  <mkdir dir="${dist}"/>
+  
+  <jar jarfile="${dist}/${release.jar}" basedir="${build.main}" manifest="${src.main.manifest}">
+      <manifest>
+        <attribute name="Implementation-Title" value="${release.name}"/>
+				<attribute name="Implementation-Version" value="${release.version}"/>
+        <attribute name="Class-Path" value="=
+        	${lib.name.backport-util-concurrent}
+        	${lib.name.commons-collections}
+        	${lib.name.commons-io}
+        	${lib.name.commons-lang} 
+        	${library.dolmen} 
+          ${library.log4j}
+        	${lib.name.mina.core}
+        	${library.slf4j}
+        "/>
+      </manifest>
+  </jar>
+</target>
+
+<target name="jar_samples" depends="jar_main, build_samples">
+  <mkdir dir="${dist.samples}"/>
+	<property name="samples.class-path" value="
+  	../../lib/${lib.name.backport-util-concurrent}
+		../../lib/${lib.name.commons-collections}
+		../../lib/${lib.name.commons-io}
+		../../lib/${lib.name.commons-lang} 
+		../../lib/${lib.name.dolmen} 
+		../../lib/${lib.name.log4j}
+		../../lib/${lib.name.mina.core}
+		../../lib/${lib.name.slf4j}
+		../../${release.jar}
+	"/>  
+	
+	<property name="CEchoSCU" value="${dist.samples}/CEchoSCU"/>
+	<mkdir dir="${CEchoSCU}"/>
+	<copy file="${src.samples.resources}/log4j.properties" tofile="${CEchoSCU}/log4j.properties"/>
+	<copy file="${src.samples.resources}/log4j.properties" tofile="${CEchoSCU}/log4j.properties"/>
+	<jar jarfile="${CEchoSCU}/CEchoSCU.jar" basedir="${build.samples}">
+    <manifest>
+      <attribute name="Main-Class" value="org.dicom4j.samples.network.cecho.CEchoSCU"/>
+      <attribute name="Implementation-Title" value="${release.name}"/>
+			<attribute name="Implementation-Version" value="${release.version}"/>
+      <attribute name="Class-Path" value="${samples.class-path}"/>
+    </manifest>
+  </jar>
+      
+  <property name="CEchoSCP" value="${dist.samples}/CEchoSCP"/>
+  <mkdir dir="${CEchoSCP}"/>
+	<copy file="${src.samples.resources}/log4j.properties" tofile="${CEchoSCP}/log4j.properties"/>
+  <copy file="${src.samples.resources}/CEchoSCP.properties" tofile="${CEchoSCP}/CEchoSCP.properties"/>
+    <jar jarfile="${CEchoSCP}/CEchoSCP.jar" basedir="${build}">
+      <manifest>
+        <attribute name="Main-Class" value="org.dicom4j.samples.network.cecho.CEchoSCP"/>
+        <attribute name="Implementation-Title" value="${project.name}"/>
+	 		 	<attribute name="Implementation-Version" value="${project.version}"/>
+        <attribute name="Class-Path" value="${samples.class-path}"/>
+      </manifest>
+    </jar>
+	  
+  <property name="WorklistSCP" value="${dist.samples}/WorklistSCP"/>
+  <mkdir dir="${WorklistSCP}"/>
+  <copy file="${src.samples.resources}/log4j.properties" tofile="${WorklistSCP}/log4j.properties"/>
+  <copy file="${src.samples.resources}/WorklistSCP.properties" tofile="${WorklistSCP}/WorklistSCP.properties"/>
+    <jar jarfile="${WorklistSCP}/WorklistSCP.jar" basedir="${build}">
+      <manifest>
+        <attribute name="Main-Class" value="org.dicom4j.samples.worklist.WorklistSCP"/>
+        <attribute name="Implementation-Title" value="${project.name}"/>
+	 		 	<attribute name="Implementation-Version" value="${project.version}"/>
+        <attribute name="Class-Path" value="${samples.class-path}"/>
+      </manifest>
+    </jar>
+	  
+</target>
+	
+<target name="jar_mock" depends="jar_main, build_mock">
+  <mkdir dir="${dist.mock}"/>
+	<property name="mock.class-path" value="
+  	../../lib/${lib.name.backport-util-concurrent}
+		../../lib/${lib.name.commons-collections}
+		../../lib/${lib.name.commons-io}
+		../../lib/${lib.name.commons-lang} 
+		../../lib/${lib.name.dolmen} 
+		../../lib/${lib.name.log4j}
+		../../lib/${lib.name.mina.core}
+		../../lib/${lib.name.slf4j}
+		../../${release.jar}
+	"/>  
+	
+	<property name="MockDicomServerFrame" value="${dist.mock}/MockDicomServerFrame"/>
+	<mkdir dir="${MockDicomServerFrame}"/>
+	<copy file="${src.mock.resources}/log4j.properties" tofile="${MockDicomServerFrame}/log4j.properties"/>
+	<jar jarfile="${MockDicomServerFrame}/MockDicomServerFrame.jar" basedir="${build.mock}">
+    <manifest>
+      <attribute name="Main-Class" value="org.dicom4j.mock.ui.MockDicomServerFrame"/>
+      <attribute name="Implementation-Title" value="${release.name}"/>
+			<attribute name="Implementation-Version" value="${release.version}"/>
+      <attribute name="Class-Path" value="${mock.class-path}"/>
+    </manifest>
+  </jar>
+</target>
+	
+<!--         For distribution         -->
+
+	<target name="dist_nodoc" depends="jar_main, jar_samples"> 
+  	<copy file="${src.main.resources}/log4j.properties" tofile="${dist}/log4j.properties"/> 
+           
+    <copy todir="${dist.src}">
+      <fileset dir="${src}"/>
+    </copy>
+    	
+    <copy todir="${dist.lib}">
+      <fileset dir="${lib}"/>
+    </copy>
+
+  </target>
+
+
+  <target name="dist" depends="clean, dist_nodoc, docs_main"> 
+  </target>
+  
+  
+<target name="packages" depends="clean, dist">
+	<echo>creates packages...</echo>
+	<mkdir dir="${packages}"/>
+	<!-- 
+	the bin package 
+	<zip destfile="${dist.packages}/${release.name}_bin.zip" basedir="${dist}"></zip> 
+	the src package
+	<zip destfile="${dist.packages}/${release.name}_src.zip">
+	    <zipfileset dir="./lib" prefix="lib"/>
+	    <zipfileset dir="./src" prefix="src"/>
+	    <fileset dir="." includes="build.xml"/>
+	    <fileset dir="." includes="build.properties"/>
+	</zip>
+	-->
+	
+	<zip destfile="${packages}/${release.name}-${release.version}.zip">
+    <zipfileset dir="${dist}"/>
+    <!-- <zipfileset dir="./src" prefix="src"/> -->
+    <fileset dir="." includes=".classpath"/>
+		<fileset dir="." includes=".project"/>
+		<fileset dir="." includes="build.xml"/>
+    <fileset dir="." includes="build.properties"/>
+		<fileset dir="." includes="lib.properties"/>
+	  <fileset dir="." includes="LICENSE"/>
+    <fileset dir="." includes="readme.html"/>
+	</zip>
+
+</target>
+
+<!--        To clean everythings      -->
+
+  <target name="clean">
+    <delete includeemptydirs="true" failonerror="false"><fileset dir="${build}"/></delete>
+    <delete includeemptydirs="true" failonerror="false"><fileset dir="${dist}"/></delete>
+    <delete includeemptydirs="true" failonerror="false"><fileset dir="${packages}"/></delete>
+  </target>
+
+</project>
+  

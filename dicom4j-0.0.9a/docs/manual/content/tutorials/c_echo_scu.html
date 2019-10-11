@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head>  <meta name="keyword" content="dicom, java, tools, toolokit, dcm, hl7, IHE" />  <meta name="description"  content="a free Open source Java Framework" />  <meta name="keyword" content="dicom java" />  <meta name="keyword" content="dicom" />  <meta name="keyword" content="java" />  <meta http-equiv="content-type" content="text/html; charset=utf-8" />  <meta name="robots" content="all" />  <link rel="icon" href="./images/dicom4j.ico" type="image/x-icon" />  <link rel="shortcut icon" href="./images/dicom4j.ico" type="image/x-icon" />  <meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type" />  <title>dicom4j</title>  <link rel="stylesheet" type="text/css" href="../../styles/global.css" />  <style type="text/css">	<!--	@page { size: 8.5in 11in; margin: 0.79in }	h3.cjk { font-family: "AR PL ShanHeiSun Uni" }	h3.ctl { font-family: "Lucidasans" }	h1.cjk { font-family: "AR PL ShanHeiSun Uni"; font-size: 16pt }	h1.ctl { font-family: "Lucidasans"; font-size: 16pt }	-->  </style></head><body>
+<div id="base"><h1 id="header">Create a C-Echo SCU</h1><h1 class="western">Description</h1>
+<p>This tutorial will show you how to create a very basic C-Echo SCU to perform Verification as Service Class User</p>
+ you have to follow this steps:
+	<ul>
+		<li>create a class which extends <span class="code">DefaultAssociationListener</span></li>
+		<li>create the AssociateRequest which contains parameters to open the Association</li>
+		<li>Open the association using a <span class="code">AssociationConnector</span></li>
+	</ul>
+<p> 
+
+<h3 class="western">First step: extends DefaultAssociationListener</h3><p>In this step you have to extends<span class="code">DefaultAssociationListener</span> in order to be notify of Association's events (open, messages received, etc..)
+</p>
+
+<pre>
+public class InnerAssociationListener extends	DefaultAssociationListener {
+
+	@Override
+	public void associationOpened(Association aAssociation, AssociateSession aAssociateSession) throws Exception {
+		CEchoRequestMessage lMessage = fFactory.newCEchoRequest(SOPClass.Verification.getUID());
+		byte lPres = aAssociateSession.getSuitablePresentationContextID(SOPClass.Verification.getUID());
+
+		for (int i = 0; i < 1; i++) {
+			SendThread lT = new SendThread(aAssociation, lPres, lMessage);
+			lT.start();
+		}
+
+	}
+
+	@Override
+	public void messageReceived(Association aAssociation, byte aPresentationContextID, DimseMessage aMessage) throws Exception {
+		if (aMessage.isCEchoResponse()) {
+			logger.debug("isCEchoResponse");
+			logger.info("Response: " + ((CEchoResponseMessage)aMessage).statusToString() );
+			aAssociation.sendReleaseRequest();
+		}
+	}
+
+}
+
+private class SendThread extends Thread {
+
+	private Association fAssoc;
+
+	private DimseMessage fMessage;
+
+	private byte fPres;
+
+	public SendThread(Association aAssoc, byte aPres, DimseMessage aMessage) {
+		fAssoc = aAssoc;
+		fPres = aPres;
+		fMessage = aMessage;
+	}
+
+	@Override
+	public void run() {
+		super.run();
+		try {
+			fAssoc.sendMessage(fPres, fMessage);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+
+	}
+
+}
+</pre>
+
+<p>For more details on Association negotiation, you can check dicom norms (part 8).</p>
+
+<h3 class="western">Second step: create the AssociateRequest</h3>
+
+<pre>
+protected AssociateRequest createRequest() throws Exception  {
+	AssociateRequest lRequest = new AssociateRequest();
+	lRequest.setMaximumPDUSize(60000);
+	lRequest.setMaximumNumberOperationsInvoked(4);
+	lRequest.setMaximumNumberOperationsPerformed(4);
+	lRequest.addPresentationContext(SOPClass.Verification, TransferSyntax.Default);		
+	return lRequest;
+}
+</pre>
+
+<h3 class="western">Third step: Open the association</h3>
+
+<pre>
+protected AssociateRequest createRequest() throws Exception  {
+	AssociateRequest lRequest = new AssociateRequest();
+	lRequest.setMaximumPDUSize(60000);
+	lRequest.setMaximumNumberOperationsInvoked(4);
+	lRequest.setMaximumNumberOperationsPerformed(4);
+	lRequest.addPresentationContext(SOPClass.Verification, TransferSyntax.Default);		
+	return lRequest;
+}
+</pre>
+
+<p> When the association will be opened, the InnerAssociationListener will send the C-Echo-Request message</p>
+
+
+
+
+
+<p><a href="javascript:history.back();">Back</a></p>
+
+	<script type="text/javascript">	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));	</script>	<script type="text/javascript">	var pageTracker = _gat._getTracker("UA-3487967-1");	pageTracker._initData();	pageTracker._trackPageview();	</script>
+	</body></html>

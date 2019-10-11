@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head>  <meta name="keyword" content="dicom, java, tools, toolokit, dcm, hl7, IHE" />  <meta name="description"  content="a free Open source Java Framework" />  <meta name="keyword" content="dicom java" />  <meta name="keyword" content="dicom" />  <meta name="keyword" content="java" />  <meta http-equiv="content-type" content="text/html; charset=utf-8" />  <meta name="robots" content="all" />  <link rel="icon" href="./images/dicom4j.ico" type="image/x-icon" />  <link rel="shortcut icon" href="./images/dicom4j.ico" type="image/x-icon" />  <meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type" />  <title>dicom4j</title>  <link rel="stylesheet" type="text/css" href="../styles/global.css" />  <style type="text/css">	<!--	@page { size: 8.5in 11in; margin: 0.79in }	h3.cjk { font-family: "AR PL ShanHeiSun Uni" }	h3.ctl { font-family: "Lucidasans" }	h1.cjk { font-family: "AR PL ShanHeiSun Uni"; font-size: 16pt }	h1.ctl { font-family: "Lucidasans"; font-size: 16pt }	-->  </style></head>
+
+<body>
+
+<div id="base">
+
+<h1 id="header"><center>Version History</center></h1>
+	 
+	<h3 class="western">------ dicom4j 0.0.9 () ------</h3>
+	<ul>
+	<li><b>[changes]</b> DimseMessageFactory moved to org.dicom4j.network.dimse</li>
+	<li><b>[changes]</b> package org.dicom4j.management.beans is now org.dicom4j.management.model.beans</li>
+	
+	<li><b>[enhancement]</b> add of SopClassRegistry and TransfertSyntaxRegistry to configure the object's factory</li>
+	<li><b>[new class]</b> org.dicom4j.core.AbstractFactory</li>
+	<li><b>[removed class]</b> org.dicom4j.dicom.TransferSyntax</li>
+  <li><b>[removed class]</b> org.dicom4j.dicom.TransferSyntaxes</li>
+  <li><b>[removed class]</b> org.dicom4j.dicom.uniqueidentifiers.TransferSyntaxes</li>
+	<li><b>[removed class]</b> DimseServiceBroker</li>
+	<li><b>[removed class]</b> DimseServices</li>
+	<li><b>[removed class]</b> DimseServicesManager</li>
+	<li><b>[removed package]</b> org.dicom4j.core.implementation</li>
+	<li><b>[removed package]</b> org.dicom4j.core.configuration</li>
+	<li><b>[removed package]</b> org.dicom4j.core.logging</li>
+	<li><b>[removed package]</b> org.dicom4j.network.dimse.services</li>
+	<li><b>[removed package]</b> org.dicom4j.network.dimse.services.support</li>
+	</ul>
+	 
+	<h3 class="western">------ dicom4j 0.0.8 (2009 september 29) ------</h3>
+	<ul>
+	<li><b>[changes]</b> code cleaning</li>
+	<li><b>[new interface]</b> org.dicom4j.network.protocoldataunit.items.ProtocolDataUnitItem</li>
+	<li><b>[new interface]</b> org.dicom4j.network.protocoldataunit.ProtocolDataUnit</li>
+	<li><b>[new interface]</b> org.dicom4j.network.protocoldataunit.userinformationsubitems.UserInformationSubItem</li>
+	</ul>
+	
+	 
+	<h3 class="western">------ dicom4j 0.0.7 (2009 January 21) ------</h3>
+	<h4>bug fixes</h4>
+	<ul>
+		<li>DicomWriter.writeFileMetaInformation() doesn't write data if FMI doesn't contains data. Check the new DicomFile API to see the new behavior</il>
+		<li>AssociationAcceptor.unBind release all associated thread</li>
+	</ul>
+	
+	<h4>enhancements</h4>
+	<ul>
+		<li>new ant Task: findbugs to create a report using findbugs</li>
+		<li>new packages: org.dicom4j.toolkit (work in progress)</li>
+		<li>new packages: org.dicom4j.plugin (work in progress)</li>
+		<li>org.dicom4j.dicom.dictionary re-writed</li>
+	</ul>
+		
+	<h4>new classes</h4>
+	<ul>
+		<li>org.dicom4j.network.dimse.DimseStatus</li>
+		<li>new test cases</li>
+	</ul>
+	
+	<h4>changes</h4>
+	<ul>
+		<li>org.dicom4j.network.query is now in the toolkit</li>
+		<li>CEchoResponseHandler removed</li>
+		<li>some deprecated classes removed</li>
+		<li>apache's new lib version</li>
+	</ul> 
+	 
+	<h3 class="western">------ dicom4j 0.0.6 (2008 december 15) ------</h3>
+	<p>Bug fixes
+	<ul>
+		<li>fCurrentID of DimseMessageFactory is now static to be sure that mutli factory instance can't provides the same message ID</li>
+		<li>stream.skip now check the requested skip is the real skipped bytes </li>
+		<li>AssociateRQACPDU.read() : now throw an execept if can read all bytes </il>
+	</ul></p>
+	
+	<p>Enhancements
+	<ul>
+		<li>new ant Task: findbugs to create a report using findbugs</li>
+		<li>new packages: org.dicom4j.toolkit (work in progress)</li>
+	</ul>
+	</p>
+	
+	<p>New classes
+	<ul>
+		<li>org.dicom4j.network.dimse.DimseStatus</li>
+		<li>new test cases</li>
+	</ul></p>
+	
+	<h5>Changes</h5>
+	<ul>
+		<li>org.dicom4j.network.query is now in the toolkit</li>
+		<li>CEchoResponseHandler removed</li>
+		<li>some deprecated classes removed</li>
+	</ul>
+	
+	
+	<h3 class="western">------ dicom4j 0.0.5 (2008 march 10) ------</h3>
+	<h5>Bug fixes</h5>
+	<h5>Enhancements</h5>
+	<ul>
+		<li>all com.pixelmed classes removed</li>
+		<li>new samples classes</li>
+		<li>new tests cases</li>
+	</ul>
+	<h5>New classes</h5>
+	<ul>
+		<li>AssociationAcceptorConfiguration and AssociationConnectorConfiguration</li>
+		<li>packages org.dicom4j.data.elements.validators</li>
+		<li>packages org.dicom4j.data.elements.support</li>
+	</ul>
+	<h5>Changes</h5>
+	<ul>
+		<li>use of JDK 5.0 instead of JDK 1.4</li>
+		<li>use of mina-core-1.0.5 instead of mina-core-1.0.5</li>
+		<li>package org.dicom4j.network.association.transport is now in the Dolmen lib</li>
+		<li>package org.dicom4j.dicom.directory renamed to org.dicom4j.io.directory</li>
+	</ul>	
+
+<p><a href="javascript:history.back();">Back</a></p>
+	
+	</div>
+		</body></html>

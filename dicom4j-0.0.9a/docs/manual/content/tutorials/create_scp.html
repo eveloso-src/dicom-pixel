@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head>  <meta name="keyword" content="dicom, java, tools, toolokit, dcm, hl7, IHE" />  <meta name="description"  content="a free Open source Java Framework" />  <meta name="keyword" content="dicom java" />  <meta name="keyword" content="dicom" />  <meta name="keyword" content="java" />  <meta http-equiv="content-type" content="text/html; charset=utf-8" />  <meta name="robots" content="all" />  <link rel="icon" href="./images/dicom4j.ico" type="image/x-icon" />  <link rel="shortcut icon" href="./images/dicom4j.ico" type="image/x-icon" />  <meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type" />  <title>dicom4j</title>  <link rel="stylesheet" type="text/css" href="../styles/global.css" />  <style type="text/css">	<!--	@page { size: 8.5in 11in; margin: 0.79in }	h3.cjk { font-family: "AR PL ShanHeiSun Uni" }	h3.ctl { font-family: "Lucidasans" }	h1.cjk { font-family: "AR PL ShanHeiSun Uni"; font-size: 16pt }	h1.ctl { font-family: "Lucidasans"; font-size: 16pt }	-->  </style></head><body>
+<div id="base"><h1 id="header">How to create a server</h1><h1 class="western">Description</h1>
+<p>This tutorial will show you how to create a Dicom SCP server with dicom4j.</p>
+ to make a server, you have to follow this steps:
+	<ul>
+		<li>create a class which extends <span class="code">DefaultAssociateRequestHandler</span></li>
+		<li>create a class which extends <span class="code">DefaultAssociationListener</span></li>
+		<li>create a server class which will use an <span class="code">AssociationAcceptor</span> to accept assocition from remote peer</li>
+		
+	</ul>
+<p> 
+
+<h3 class="western">First step: extends DefaultAssociateRequestHandler</h3><p>In this step you have to extends<span class="code">DefaultAssociateRequestHandler</span> in order to implements which SOP classes your server will support, 
+and accept or reject Requested Sop class.</p>
+
+<p>In order to Accept or Refuse SOP classes you have to Override <span class="code">requestReceived</span> methods.</p>
+
+<p>In this method, you have to return an <span class="code">AssociateResponse</span> related to the <span class="code">AssociateRequest</span>. So you have to create a 
+default response, and loop to manage all <span class="code">PresentationContextItem</span>. For all <span class="code">PresentationContextItem</span> you have to add a PresentationContext 
+with the reason (accept or refuse) and the TransferSyntax to use.</p> 
+
+<p>in the following example we only acccept Verification SOP class and accept the first TransfertSyntax of the request 
+
+<pre>
+@Override
+public AssociateResponse requestReceived(Association aAssociation, AssociateRequest aAssociateRequest) {
+	AssociateResponse lReponse = createDefaultResponse(aAssociateRequest);
+	Iterator<PresentationContextItem> lPres = aAssociateRequest.getPresentationIterator();
+	while (lPres.hasNext()) {
+		PresentationContextItemRQ lPresRQ = (PresentationContextItemRQ) lPres.next();
+		if (lPresRQ.getAbstractSyntax().equals(SOPClass.Verification.getUID())) {
+			lReponse.addPresentationContext(lPresRQ.getID(),
+					NetworkStaticProperties.PresentationContextReasons.ACCEPTANCE,
+					lPresRQ.getransferSyntax(0));
+		} else {
+			lReponse.addPresentationContext(
+							lPresRQ.getID(),
+							NetworkStaticProperties.PresentationContextReasons.USER_REJECTION,
+							lPresRQ.getransferSyntax(0));
+		}
+	}
+	return lReponse; // we return the created Response
+}
+</pre>
+
+<p>For more details on Association negotiation, you can check dicom norms (part 8).</p>
+
+<h3 class="western">Second step: extends DefaultAssociationListener</h3>
+
+<p>In this step you have to extends<span class="code">DefaultAssociationListener</span> in order to handle all association events. The two main events to handle / methods to ovverride are:
+<ul>
+	<li><span class="code">exceptionCaught</span></li>
+	<li><span class="code">messageReceived</span></li>
+</ul>
+<p>
+
+<p>the <span class="code">exceptionCaught</span> is used when any-kind of Exception occurs during the communication. You have to manage want to do is 
+this case (ex: log thre message, send A-Abort)</p>
+
+<p>in the following example we print the error's message and try to send User A-Abort</p>
+<pre>
+@Override
+public void exceptionCaught(Association association, Throwable cause) {
+	System.err.println( cause.getMessage() );
+	try {
+		association.sendAbort( AssociateAbort.ServiceUserAbort );				
+	} catch (Exception e) {
+		System.err.println( cause.getMessage() );
+	}
+}
+</pre>
+
+<p>the <span class="code">messageReceived</span> is the most important methods to implements a server. This methods is called everytime a Dimse message was received from
+the remote peer throw the Assocation. To manage the message, you have to check the kind of message (by using <span class="code">instanceof</span> ) and do your stuff
+depending of the message and the message's SOP class.<p>
+
+<p>In the following example, we only manage C-Echo-Req and send abort for others types of messages.</p>
+
+<pre>
+@Override
+public void messageReceived(Association aAssociation,	byte aPresentationContextID, DimseMessage aMessage) throws Exception {
+	if (aMessage instanceof CEchoRequestMessage ) {
+		CEchoRequestMessage lRequest = (CEchoRequestMessage) aMessage;
+		int lMessageID = lRequest.getMessageID();
+		String lSOPClassUID = lRequest.getAffectedSOPClassUID();
+		CEchoResponseMessage lreponse = MessageFactory.newCEchoResponse(lMessageID, lSOPClassUID, DimseStatus.Success); 
+		aAssociation.sendMessage(aPresentationContextID, lreponse);
+	} else {
+		association.sendAbort( AssociateAbort.ServiceUserAbort );	
+	}		
+}
+</pre>
+
+<h3 class="western">Third step: create a server class</h3>
+
+<p>In order to accept association, you can use the <span class="code">AssociationAcceptor</span>. Te acceptor use the Configuration Class to set the AssociationAcceptor
+and AssociationListener to used (defined on step 1 and 2).</p>
+
+<p>In the following example, we use the acceptor on port 104.</p>
+<pre>
+public static class SCPWorker extends Thread {
+
+	public SCPWorker() {
+		super();
+	}
+
+	@Override
+	public void run() {
+		TransportAcceptorConfiguration lTransportAcceptorConfiguration = new TransportAcceptorConfiguration();
+		TransportAcceptor lAcceptor = new TransportAcceptor();
+		lAcceptor.setConfiguration(lTransportAcceptorConfiguration);
+		AssociationAcceptorConfiguration lAssocConfig = new AssociationAcceptorConfigurationImpl();
+		lAssocConfig.setAssociateRequestHandler(new CEchoSCPAssociateRequestHandler());
+		lAssocConfig.setAssociationListener(new CEchoSCPAssociationListener());
+		lAssocConfig.setTransportAcceptor(lAcceptor);
+		AssociationAcceptor lAssoc = new AssociationAcceptorImpl();
+		lAssoc.setConfiguration(lAssocConfig);
+		try {
+			lAssoc.bind( 104 );
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+</pre>
+<p>Note: The acceptor must be launched on a thread to not block the main thread.</p>
+
+
+<p><a href="javascript:history.back();">Back</a></p>
+
+
+
+
+	<script type="text/javascript">	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));	</script>	<script type="text/javascript">	var pageTracker = _gat._getTracker("UA-3487967-1");	pageTracker._initData();	pageTracker._trackPageview();	</script>
+	</body></html>

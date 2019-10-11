@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head>  <meta name="keyword" content="dicom, java, tools, toolokit, dcm, hl7, IHE" />  <meta name="description"  content="a free Open source Java Framework" />  <meta name="keyword" content="dicom java" />  <meta name="keyword" content="dicom" />  <meta name="keyword" content="java" />  <meta http-equiv="content-type" content="text/html; charset=utf-8" />  <meta name="robots" content="all" />  <link rel="icon" href="./images/dicom4j.ico" type="image/x-icon" />  <link rel="shortcut icon" href="./images/dicom4j.ico" type="image/x-icon" />  <meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type" />  <title>dicom4j</title>  <link rel="stylesheet" type="text/css" href="../../styles/global.css" />  <style type="text/css">	<!--	@page { size: 8.5in 11in; margin: 0.79in }	h3.cjk { font-family: "AR PL ShanHeiSun Uni" }	h3.ctl { font-family: "Lucidasans" }	h1.cjk { font-family: "AR PL ShanHeiSun Uni"; font-size: 16pt }	h1.ctl { font-family: "Lucidasans"; font-size: 16pt }	-->  </style></head><body>
+<div id="base"><h1 id="header">Worklist SCU</h1><h1 class="western">Description</h1>
+<p>This tutorial will show you how to create a very basic C-Echo SCU to perform Verification as Service Class User</p>
+ you have to follow this steps:
+	<ul>
+		<li>create a class which extends <span class="code">DefaultAssociationListener</span></li>
+		<li>create the AssociateRequest which contains parameters to open the Association</li>
+		<li>Open the association using a <span class="code">AssociationConnector</span></li>
+	</ul>
+<p> 
+
+<pre>
+public class WorklistSCU {
+
+	private static final long serialVersionUID = 1L;
+
+	private static final Logger logger = LoggerFactory.getLogger(WorklistSCU.class);
+	
+	private AssociatePrimitiveFactory associateFactroy = new AssociatePrimitiveFactory();
+	
+	/**
+	 * The factory to create Dimse messages
+	 */
+	private DimseMessageFactory messageFactory = new DimseMessageFactory();
+	
+	/**
+	 * Connector to initiate associations
+	 */
+	private AssociationConnector connector = new AssociationConnectorImpl();
+	
+	
+	public WorklistSCU() {
+		super();
+		// we create the Connector's configuration
+		AssociationConnectorConfiguration lConfig = new AssociationConnectorConfigurationImpl();
+		// we set the Association listener, used to receive data from the remote
+		lConfig.setAssociationListener(new WorklistSCUAssociationListener());
+		// we set the TransportConnector used to open the transport connection
+		lConfig.setTransportConnector(new TransportConnector());
+		// we configure the connector
+		connector.setConfiguration(lConfig);
+	}
+	
+	public void performQuery() throws Exception {
+		try {
+			// we create the request
+			AssociateRequest request = createRequest();
+			logger.info("Request: " + request);
+			// we open the connection
+			connector.connect("localhost", 10044, createRequest() );
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+	}
+	
+	protected AssociateRequest createRequest() throws Exception  {
+		AssociateRequest request = associateFactroy.newAssociateRequest();
+		request.setMaximumPDUSize(60000);
+		request.setMaximumNumberOperationsInvoked(4);
+		request.setMaximumNumberOperationsPerformed(4);
+		request.addPresentationContext(SOPClass.Verification, TransferSyntax.Default);		
+		request.addPresentationContext(SOPClass.ModalityWorklistInformationModelFIND, TransferSyntax.Default);		
+		return request;
+	}
+	
+	/**
+	 * Handle Association's events
+	 * 
+	 */
+	public class WorklistSCUAssociationListener extends	DefaultAssociationListener {
+
+		@Override
+		public void associationOpened(Association association, AssociateSession associateSession) throws Exception {
+			super.associationOpened(association, associateSession);
+			logger.info("AssociateSession: " + associateSession);
+			if ( associateSession.isAccepted( SOPClass.ModalityWorklistInformationModelFIND )) {
+				byte presentationID = associateSession.getSuitablePresentationContextID( SOPClass.ModalityWorklistInformationModelFIND );
+				CFindRequestMessage requestMessage = messageFactory.newCFindRequest( SOPClass.ModalityWorklistInformationModelFIND  );
+				DataSet data = new DataSet();
+				data.addPersonName( DataElements.newPatientName(), "");
+				requestMessage.setDataSet( data );
+				logger.info("Message: \n" + requestMessage);
+				association.sendMessage( presentationID , requestMessage);
+			} else {
+				logger.warn( SOPClass.ModalityWorklistInformationModelFIND.getName() + " was not accepted " );
+			}
+		}
+
+		@Override
+		public void messageReceived(Association association, byte presentationContextID, AbstractDimseMessage message) throws Exception {
+			logger.info("messageReceived: " + message);
+			if ( message instanceof CFindResponseMessage) {
+				CFindResponseMessage response = (CFindResponseMessage)message;
+				logger.info("Response Status: " + response.statusToString() );
+				DataSet data = response.getDataSet();
+				if ( data != null) {
+					logger.info("Data: \n "+ data);
+				}
+				if ( response.isFailure() || response.isSuccess() ) {
+					association.sendReleaseRequest();
+				}
+			}
+		}
+
+		@Override
+		public void associationReleased(Association association) throws Exception {
+			logger.info("associationReleased");
+		}
+		
+	}
+</pre>
+
+
+<p><a href="javascript:history.back();">Back</a></p>
+
+	<script type="text/javascript">	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));	</script>	<script type="text/javascript">	var pageTracker = _gat._getTracker("UA-3487967-1");	pageTracker._initData();	pageTracker._trackPageview();	</script>
+	</body></html>

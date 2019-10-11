@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head>  <meta name="keyword" content="dicom, java, tools, toolokit, dcm, hl7, IHE" />  <meta name="description"  content="a free Open source Java Framework" />  <meta name="keyword" content="dicom java" />  <meta name="keyword" content="dicom" />  <meta name="keyword" content="java" />  <meta http-equiv="content-type" content="text/html; charset=utf-8" />  <meta name="robots" content="all" />  <link rel="icon" href="./images/dicom4j.ico" type="image/x-icon" />  <link rel="shortcut icon" href="./images/dicom4j.ico" type="image/x-icon" />  <meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type" />  <title>dicom4j</title>  <link rel="stylesheet" type="text/css" href="../styles/global.css" />  <style type="text/css">	<!--	@page { size: 8.5in 11in; margin: 0.79in }	h3.cjk { font-family: "AR PL ShanHeiSun Uni" }	h3.ctl { font-family: "Lucidasans" }	h1.cjk { font-family: "AR PL ShanHeiSun Uni"; font-size: 16pt }	h1.ctl { font-family: "Lucidasans"; font-size: 16pt }	-->  </style></head><body>
+<div id="base"><h1 id="header">How to dump a dicom file</h1><h1 class="western">Description</h1>
+<p>This tutorial will show you how to read and dump the content of a dicom file.</p>
+<p> 
+
+<h3 class="western">First step: create the DicomFile  and read the file</h3>
+
+<pre>
+DicomFile ldcm = new DicomFile( args[0] ); // we create the	File
+ldcm.open(); // we open it (read the data)
+</pre>
+
+<h3 class="western">Second step: extract data from all elements contains in the file</h3>
+
+<pre>
+// we get an iterator to the elements
+Iterator<DataElement> iterator = ldcm.getDataset().getIterator(); 
+int i = 1;
+
+// We dump the File Meta Information
+logger.info("\n" + ldcm.getFileMetaInformation());
+
+// we parse all elements
+while (iterator.hasNext()) {
+	// we get the current Element (DataElement is the base class for all elements)
+	DataElement lElement = (DataElement) iterator.next();
+	logger.info("Item " + i);
+	// we Dump the tag's content
+	String tag = "Tag (Group: " + lElement.getTag().getGroupAsString() + ", Element: " + lElement.getTag().getElementAsString() + ", Name: " +
+	 lElement.getTag().getName() + ")";
+	logger.info(tag);
+	// We Dump the Element's content
+	logger.info("Element (Class: " + lElement.getClass().getSimpleName() + ", VR: " + lElement.getValueRepresentation().getName() + ", VM: " +
+	 lElement.getValueMultiplicity() + ")");
+	if ( lElement.isAvailableAsString() ) {
+		// we get the values as String[]
+		String[] ldata = lElement.getStringValues();
+		for (int j = 0; j < ldata.length; j++) {
+			logger.info(" Value " + new Integer(j + 1) + " = " + ldata[j]);
+		}			
+	} else {
+		logger.info(" Value can't be get a string");
+	}
+	i++;
+</pre>
+
+<p><a href="javascript:history.back();"><img src="../images/icons/back_32.png" width="22"></a></p>
+
+
+
+
+	<script type="text/javascript">	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));	</script>	<script type="text/javascript">	var pageTracker = _gat._getTracker("UA-3487967-1");	pageTracker._initData();	pageTracker._trackPageview();	</script>
+	</body></html>

@@ -95,7 +95,7 @@ public class WebCamPreviewController implements Initializable {
 	@FXML
 	ImageView imgWebCamCapturedImage4;
 	@FXML
-	ImageView imgWebCamCapturedImage5;
+	ImageView imgWebCamCapturedImage5Main;
 	@FXML
 	ImageView imgPreview1;
 	@FXML
@@ -186,7 +186,8 @@ public class WebCamPreviewController implements Initializable {
 		listViews.add(imgWebCamCapturedImage2);
 		listViews.add(imgWebCamCapturedImage3);
 		listViews.add(imgWebCamCapturedImage4);
-		listViews.add(imgWebCamCapturedImage5);
+		listViews.add(imgWebCamCapturedImage5Main);
+		// pone tamaños a todas las pantallas segun los params deconfig
 		WindowUtil.configurePreview(listViews, height, width);
 
 		imgWebCamCapturedImage.setFitHeight(height / 2);
@@ -194,6 +195,14 @@ public class WebCamPreviewController implements Initializable {
 		imgWebCamCapturedImage.prefHeight(height / 2);
 		imgWebCamCapturedImage.prefWidth(width / 2);
 		imgWebCamCapturedImage.setPreserveRatio(true);
+		
+//
+//		imgWebCamCapturedImage5Main.setFitHeight(height / 2);
+//		imgWebCamCapturedImage5Main.setFitWidth(width / 2);
+//		imgWebCamCapturedImage5Main.prefHeight(height / 2);
+//		imgWebCamCapturedImage5Main.prefWidth(width / 2);
+//		imgWebCamCapturedImage5Main.setPreserveRatio(true);
+
 
 		List<ImageView> listPreview = new ArrayList();
 		listPreview.add(imgPreview1);
@@ -221,8 +230,8 @@ public class WebCamPreviewController implements Initializable {
 		};
 		new Thread(webCamIntilizer).start();
 		btnStartCamera.setDisable(true);
-		windows = new WindowUtil().openWindows(imgWebCamCapturedImage2, imgWebCamCapturedImage3,
-				imgWebCamCapturedImage4, imgWebCamCapturedImage5, this.cmbConfig.getSelectionModel().getSelectedItem());
+		//windows = new WindowUtil().openWindows(imgWebCamCapturedImage2, imgWebCamCapturedImage3,
+		//		imgWebCamCapturedImage4, imgWebCamCapturedImage5, this.cmbConfig.getSelectionModel().getSelectedItem());
 	}
 
 	protected void startWebCamStream() {
@@ -233,11 +242,11 @@ public class WebCamPreviewController implements Initializable {
 		labelFPS.textProperty().bind(task.messageProperty());
 		th.setDaemon(true);
 		th.start();
-		imgWebCamCapturedImage.imageProperty().bind(imageProperty);
-		imgWebCamCapturedImage2.imageProperty().bind(imageProperty2);
-		imgWebCamCapturedImage3.imageProperty().bind(imageProperty3);
-		imgWebCamCapturedImage4.imageProperty().bind(imageProperty3);
-		imgWebCamCapturedImage5.imageProperty().bind(imageProperty3);
+		//imgWebCamCapturedImage.imageProperty().bind(imageProperty);
+		//imgWebCamCapturedImage2.imageProperty().bind(imageProperty2);
+		//imgWebCamCapturedImage3.imageProperty().bind(imageProperty3);
+		//imgWebCamCapturedImage4.imageProperty().bind(imageProperty3);
+		imgWebCamCapturedImage5Main.imageProperty().bind(imageProperty3);
 
 		imgPreview1.imageProperty().bind(imageProperty3);
 		imgPreview2.imageProperty().bind(imageProperty2);

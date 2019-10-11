@@ -28,6 +28,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Emiliano/datos/clases/dicom4j-0.0.9a/dicom4j-0.0.9a.jar"/>
+	<classpathentry kind="lib" path="/home/eveloso/datos/dicom-pixel/dicom4j-0.0.9a/dicom4j-0.0.9a.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

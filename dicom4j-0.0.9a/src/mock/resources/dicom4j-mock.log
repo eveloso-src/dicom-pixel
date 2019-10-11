@@ -1,0 +1,10 @@
+[DEBUG][main] 20:30:44,846 org.dicom4j.network.association.associate.AssociatePrimitiveFactory - setMaximumPduSize: 65000
+[DEBUG][main] 20:30:44,847 org.dicom4j.network.association.support.AssociationServiceConfigurationImpl - setSopClassRegistry: dicom4j SOPClassRegistry
+[DEBUG][main] 20:30:44,847 org.dicom4j.network.association.support.AssociationServiceConfigurationImpl - setTransferSyntaxRegistry: org.dicom4j.dicom.uniqueidentifiers.TransferSyntaxRegistry@3b1f38
+[DEBUG][main] 20:30:44,849 org.dicom4j.network.association.support.AssociationServiceConfigurationImpl - setAssociateRequestHandler: DefaultAssociateRequestHandler
+[DEBUG][main] 20:30:44,849 org.dicom4j.network.association.support.AssociationServiceConfigurationImpl - setAssociateResponseHandler: DefaultAssociateResponseListener
+[DEBUG][main] 20:30:44,849 org.dicom4j.network.association.support.AssociationServiceConfigurationImpl - setAssociationListener: DefaultAssociationListener
+[INFO ][main] 20:30:44,850 org.dicom4j.network.association.support.AssociationServiceConfigurationImpl - setMonitor: DefaultAssociationMonitor
+[DEBUG][main] 20:30:44,854 org.dicom4j.network.association.support.AssociationAcceptorConfigurationImpl - setTransportAcceptor: org.dolmen.network.transport.acceptor.TransportAcceptor@8e8541
+[DEBUG][main] 20:30:44,855 org.dicom4j.network.association.support.AssociationServiceConfigurationImpl - setAssociateRequestHandler: DefaultAssociateRequestHandler
+[DEBUG][main] 20:30:44,856 org.dicom4j.network.association.support.AssociationServiceConfigurationImpl - setAssociationListener: org.dicom4j.mock.network.MockDicomServer$MockDicomServerAssociationListener@9ff0a8
