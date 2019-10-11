@@ -190,4 +190,11 @@ public class WindowUtil {
 		}
 		return configs;
 	}
+
+	public static void closeMonitors(List<Stage> windows) {
+
+		for (Stage stg : windows) {
+			stg.close();
+		}
+	}
 }

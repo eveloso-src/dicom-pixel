@@ -102,7 +102,6 @@
                         <Insets left="120.0" />
                      </GridPane.margin>
                   </TextField>
-                  <Button mnemonicParsing="false" onAction="#cargarConfig" text="Cargar Conf" />
                </children>
             </GridPane>
         

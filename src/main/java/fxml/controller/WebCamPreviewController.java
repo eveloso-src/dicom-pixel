@@ -106,8 +106,8 @@ public class WebCamPreviewController implements Initializable {
 	ImageView imgPreview4;
 	@FXML
 	ImageView video1;
-	@FXML
-	ImageView miniFrame;
+//	@FXML
+//	ImageView miniFrame;
 	@FXML
 	public Slider sliderFrame;
 
@@ -123,7 +123,7 @@ public class WebCamPreviewController implements Initializable {
 
 	public List<Stage> windows;
 
-	ImageView duplicatedCam;
+//	ImageView duplicatedCam;
 
 	private BufferedImage grabbedImage;
 
@@ -195,14 +195,13 @@ public class WebCamPreviewController implements Initializable {
 		imgWebCamCapturedImage.prefHeight(height / 2);
 		imgWebCamCapturedImage.prefWidth(width / 2);
 		imgWebCamCapturedImage.setPreserveRatio(true);
-		
+
 //
 //		imgWebCamCapturedImage5Main.setFitHeight(height / 2);
 //		imgWebCamCapturedImage5Main.setFitWidth(width / 2);
 //		imgWebCamCapturedImage5Main.prefHeight(height / 2);
 //		imgWebCamCapturedImage5Main.prefWidth(width / 2);
 //		imgWebCamCapturedImage5Main.setPreserveRatio(true);
-
 
 		List<ImageView> listPreview = new ArrayList();
 		listPreview.add(imgPreview1);
@@ -230,8 +229,9 @@ public class WebCamPreviewController implements Initializable {
 		};
 		new Thread(webCamIntilizer).start();
 		btnStartCamera.setDisable(true);
-		//windows = new WindowUtil().openWindows(imgWebCamCapturedImage2, imgWebCamCapturedImage3,
-		//		imgWebCamCapturedImage4, imgWebCamCapturedImage5, this.cmbConfig.getSelectionModel().getSelectedItem());
+		windows = new WindowUtil().openWindows(imgWebCamCapturedImage2, imgWebCamCapturedImage3,
+				imgWebCamCapturedImage4, imgWebCamCapturedImage5Main,
+				this.cmbConfig.getSelectionModel().getSelectedItem());
 	}
 
 	protected void startWebCamStream() {
@@ -242,19 +242,20 @@ public class WebCamPreviewController implements Initializable {
 		labelFPS.textProperty().bind(task.messageProperty());
 		th.setDaemon(true);
 		th.start();
-		//imgWebCamCapturedImage.imageProperty().bind(imageProperty);
-		//imgWebCamCapturedImage2.imageProperty().bind(imageProperty2);
-		//imgWebCamCapturedImage3.imageProperty().bind(imageProperty3);
-		//imgWebCamCapturedImage4.imageProperty().bind(imageProperty3);
+		imgWebCamCapturedImage.imageProperty().bind(imageProperty);
+		imgWebCamCapturedImage2.imageProperty().bind(imageProperty2);
+		imgWebCamCapturedImage3.imageProperty().bind(imageProperty3);
+		imgWebCamCapturedImage4.imageProperty().bind(imageProperty3);
 		imgWebCamCapturedImage5Main.imageProperty().bind(imageProperty3);
 
 		imgPreview1.imageProperty().bind(imageProperty3);
 		imgPreview2.imageProperty().bind(imageProperty2);
 		imgPreview3.imageProperty().bind(imageProperty3);
-		imgPreview4.imageProperty().bind(imageProperty3);
+		imgPreview4.imageProperty().bind(imageProperty);
 //		duplicatedCam.imageProperty().bind(imageProperty3);
 		// imgWebCamCapturedImage3.imageProperty().bind(miniFramePreview);
-		miniFrame.imageProperty().bind(miniFramePreview);
+
+		// miniFrame.imageProperty().bind(miniFramePreview);
 	}
 
 	private void closeCamera() {
@@ -316,8 +317,24 @@ public class WebCamPreviewController implements Initializable {
 			@Override
 			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
 				String value = cmbConfig.getValue();
-//				for(int i=0; i)
-//				AppLauncher.getProp("config." + value + ".monitor." + i );
+				ObservableList<String> listConfigs = WindowUtil.getConfig();
+
+				WindowUtil.closeMonitors(windows);
+				for (int i = 0; i < listConfigs.size(); i++) {
+					String itemcfg = listConfigs.get(i);
+					if (itemcfg.contentEquals(value)) {
+						//abrir monitores
+//						AppLauncher.getProp("config." + value + ".monitor." + i);
+						
+						windows = new WindowUtil().openWindows(imgWebCamCapturedImage2, imgWebCamCapturedImage3,
+								imgWebCamCapturedImage4, imgWebCamCapturedImage5Main,
+//								this.cmbConfig.getSelectionModel().getSelectedItem()
+								value
+								);
+
+
+					}
+				}
 			}
 
 		});
@@ -509,6 +526,7 @@ public class WebCamPreviewController implements Initializable {
 
 	public void clickComo() {
 		String newConfig = txtComo.getText();
+		System.out.println("guardar como.." + newConfig);
 		if (!StringUtils.isEmpty(newConfig)) {
 			cmbConfig.getItems().add(newConfig);
 			cmbConfig.setValue(newConfig);
@@ -518,17 +536,18 @@ public class WebCamPreviewController implements Initializable {
 
 	public void clickGuardar() {
 		String item = cmbConfig.getSelectionModel().getSelectedItem();
+		System.out.println("guardar " + item);
 		String value;
 		for (int i = 1; i < 5; i++) {
-			value = String.valueOf(windows.get(i - 1).getX()) + "." + String.valueOf(windows.get(i - 1).getY());
-			AppLauncher.setProp("config." + item + ".monitor." + i, value);
+			value = String.valueOf(windows.get(i - 1).getX()) + ";" + String.valueOf(windows.get(i - 1).getY());
+			AppLauncher.setProp("config." + item + ".monitor." + i, value.replace(".0", ""));
 		}
 
 		AppLauncher.setProp(CONFIG_LAST_MONITOR, item);
 	}
-	
+
 	public void cargarConfig() {
-		
+
 	}
 
 }
