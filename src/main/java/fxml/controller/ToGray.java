@@ -28,21 +28,19 @@ public class ToGray {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				pixel[i][j] = raster.getSample(i, j, 0);
-				 pixelBW[i][j] = new Double(raster.getSample(i, j, 0) * 0.21 +
-				 raster.getSample(i, j, 1) * 0.71
-				 + raster.getSample(i, j, 2) * 0.07).byteValue();
+				pixelBW[i][j] = new Double(raster.getSample(i, j, 0) * 0.21 + raster.getSample(i, j, 1) * 0.71
+						+ raster.getSample(i, j, 2) * 0.07).byteValue();
 			}
 		}
-		
-		int widthFile = Integer.valueOf( AppLauncher.getProp("widthFile")).intValue();
-		int heightFile = Integer.valueOf( AppLauncher.getProp("heightFile")).intValue();
-	
+
+		int widthFile = Integer.valueOf(AppLauncher.getProp("widthFile")).intValue();
+		int heightFile = Integer.valueOf(AppLauncher.getProp("heightFile")).intValue();
 
 		BufferedImage theImage = new BufferedImage(widthFile, heightFile, BufferedImage.TYPE_BYTE_GRAY);
 		BufferedImage theImage2 = new BufferedImage(widthFile, heightFile, BufferedImage.TYPE_BYTE_GRAY);
 
-		BufferedImage [] imagesArray = new BufferedImage[2];
-		
+		BufferedImage[] imagesArray = new BufferedImage[2];
+
 		// conversion automatica a grises
 		Graphics2D graphic = theImage.createGraphics();
 		graphic.drawImage(img, 0, 0, null, null);
@@ -52,24 +50,29 @@ public class ToGray {
 		graphic.drawImage(img, 0, 0, null, null);
 		graphic.dispose();
 
-		
 		// retocar la imagen por bytes
 		int value = 255;
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				value = pixel[i][j] << 16 | pixel[i][j] << 8 | pixel[i][j];
-				if (i > 0) {
-					value = value - (pixel[i - 1][j] << 16 | pixel[i - 1][j] << 8 | pixel[i - 1][j]);
+//				if (i == 3 || j == 3) {
+//					value = 255 << 16 | 255 << 8 | 255;
+//				}
+
+				if (WebCamPreviewController.matrix[WebCamPreviewController.nMonitor][0] == 1) {
+//					convolucion(pixel[i][j]);
+					if (i > 0) {
+						value = value - (pixel[i - 1][j] << 16 | pixel[i - 1][j] << 8 | pixel[i - 1][j]);
+					}
+
 				}
-				if (i == 3 || j == 3) {
-					value = 255 << 16 | 255 << 8 | 255;
-				}
+
 				theImage.setRGB(i, j, value);
 			}
 		}
 
 		try {
-			SimpleDateFormat sdf = new SimpleDateFormat(AppLauncher.getProp("fileDateFormat") );
+			SimpleDateFormat sdf = new SimpleDateFormat(AppLauncher.getProp("fileDateFormat"));
 
 			imagenes.add(theImage);
 
@@ -89,6 +92,11 @@ public class ToGray {
 		imagesArray[0] = theImage;
 		imagesArray[1] = theImage2;
 		return imagesArray;
+	}
+
+	private static void convolucion(int i) {
+
+//		System.out.println("convolucion");
 	}
 
 }

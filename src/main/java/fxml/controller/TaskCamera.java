@@ -17,7 +17,7 @@ import javafx.scene.image.Image;
 
 public class TaskCamera extends Task<Void> {
 
-	public ArrayDeque<BufferedImage> imagenes; 
+	public ArrayDeque<BufferedImage> imagenes;
 	public static boolean autoPlay = true;
 	BufferedImage[] listImg;
 	public boolean stopCamera = false;
@@ -68,13 +68,13 @@ public class TaskCamera extends Task<Void> {
 		Calendar inicio, fin;
 		double value;
 		int contadorFPS = 0;
-		long [] promedio = new long[800];
+		long[] promedio = new long[800];
 		inicio = Calendar.getInstance();
 		while (!stopCamera) {
 			try {
 //				System.out.println("Fps: " + webcamDefault.getFPS());
 //				ByteBuffer bytes = webcamDefault.getImageBytes();
-				
+
 				if ((grabbedImage = webcamDefault.getImage()) != null) {
 					arrayImg = tg.convertBufferedImage(grabbedImage, imagenes);
 					fin = Calendar.getInstance();
@@ -85,7 +85,8 @@ public class TaskCamera extends Task<Void> {
 						segundo = ssdf.format(new Date());
 //						value = ((double) 1 / (fin.getTimeInMillis() - inicio.getTimeInMillis()) * 1000);
 //						updateMessage(String.valueOf(value).substring(0, String.valueOf(value).indexOf(".")));
-						updateMessage(String.valueOf(webcamDefault.getFPS()).substring(0, String.valueOf(webcamDefault.getFPS()).indexOf(".")));
+						updateMessage(String.valueOf(webcamDefault.getFPS()).substring(0,
+								String.valueOf(webcamDefault.getFPS()).indexOf(".")));
 						inicio = fin;
 //						contadorFPS++;
 					}
@@ -96,16 +97,11 @@ public class TaskCamera extends Task<Void> {
 					executor.submit(new Runnable() {
 						// @Override
 						public void run() {
+							// grabbedImage : imagen color
 							imageProperty.set(SwingFXUtils.toFXImage(grabbedImage, null));
-							if (WebCamPreviewController.filter1Active) {
-								
-								imageProperty2.set(SwingFXUtils.toFXImage(bwImage, null));
-							}
-							else {
-								imageProperty2.set(SwingFXUtils.toFXImage(bwImage2, null));
-									
-							}
-								
+
+							imageProperty2.set(SwingFXUtils.toFXImage(bwImage, null));
+
 							imageProperty3.set(SwingFXUtils.toFXImage(bwImage2, null));
 							imageProperty4.set(SwingFXUtils.toFXImage(bwImage2, null));
 						}
@@ -117,8 +113,7 @@ public class TaskCamera extends Task<Void> {
 						// this.webCamPreviewController.btnStopCamera.setDisable(false);
 						miniFrame.set(SwingFXUtils.toFXImage(imagenes.poll(), null));
 					}
-				}
-				else {
+				} else {
 //					System.out.println("false");
 				}
 			} catch (Exception e) {
@@ -126,12 +121,12 @@ public class TaskCamera extends Task<Void> {
 		}
 
 		autoPlay = true;
-		
+
 		webCamPreviewController.createSlider(imagenes);
 
-		
 		// TaskCamera.saveImages(imagenes);
 		return null;
+
 	}
 
 	protected Image getImageNum(Number new_val) {

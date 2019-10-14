@@ -28,6 +28,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -39,6 +40,9 @@ import laucher.AppLauncher;
 public class WebCamPreviewController implements Initializable {
 	public static final String CONFIG_LAST_MONITOR = "config.last.monitor";
 
+	public static int[][] matrix = { { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 } };
+
+	public static int nMonitor = 0;
 	@FXML
 	Button btnStartCamera;
 	@FXML
@@ -111,7 +115,7 @@ public class WebCamPreviewController implements Initializable {
 	@FXML
 	public Slider sliderFrame;
 
-	public static boolean filter1Active = false;
+//	public static boolean filter1Active = false;
 
 	public BufferedImage[] lBuffered;
 	public static int speed = 30;
@@ -131,12 +135,15 @@ public class WebCamPreviewController implements Initializable {
 	private Webcam selWebCam = null;
 
 	private List<Configuracion> monitorList = new ArrayList<Configuracion>();
+	private List<CheckBox> controlesList = new ArrayList<CheckBox>();
 	private Webcam webcamDefault = Webcam.getDefault();
 
 	private boolean stopCamera = false;
 	private ObjectProperty<Image> imageProperty = new SimpleObjectProperty<Image>();
 	private ObjectProperty<Image> imageProperty2 = new SimpleObjectProperty<Image>();
 	private ObjectProperty<Image> imageProperty3 = new SimpleObjectProperty<Image>();
+	private ObjectProperty<Image> imageProperty4 = new SimpleObjectProperty<Image>();
+	private ObjectProperty<Image> imageProperty5 = new SimpleObjectProperty<Image>();
 	private ObjectProperty<Image> miniFramePreview = new SimpleObjectProperty<Image>();
 
 	public javafx.scene.control.Label getLabelFPS() {
@@ -154,6 +161,7 @@ public class WebCamPreviewController implements Initializable {
 		monitorList.add(new Configuracion(radioImg2));
 		monitorList.add(new Configuracion(radioImg3));
 		monitorList.add(new Configuracion(radioImg4));
+
 		options = FXCollections.observableArrayList();
 		int webCamCounter = 0;
 		for (Webcam webcam : Webcam.getWebcams()) {
@@ -174,8 +182,16 @@ public class WebCamPreviewController implements Initializable {
 
 		this.radioImg1.setSelected(true);
 
-		checkFilter1.selectedProperty().addListener(new MonitorListener(checkFilter1, checkFilter2, monitorList));
-		checkFilter2.selectedProperty().addListener(new MonitorListener(checkFilter1, checkFilter2, monitorList));
+//		radioImg1.selectedProperty().addListener(new MonitorListener(checkFilter1, checkFilter2, monitorList, radioImg1));
+//		radioImg2.selectedProperty().addListener(new MonitorListener(checkFilter1, checkFilter2, monitorList, radioImg2));
+//		radioImg3.selectedProperty().addListener(new MonitorListener(checkFilter1, checkFilter2, monitorList, radioImg3));
+//		radioImg4.selectedProperty().addListener(new MonitorListener(checkFilter1, checkFilter2, monitorList, radioImg4));
+
+//		checkFilter1.selectedProperty().addListener(new CheckListener(monitorList, checkFilter1));
+//		checkFilter2.selectedProperty().addListener(new CheckListener(monitorList, checkFilter2));
+
+		controlesList.add(checkFilter1);
+		controlesList.add(checkFilter2);
 	}
 
 	protected void setImageViewSize() {
@@ -237,21 +253,25 @@ public class WebCamPreviewController implements Initializable {
 	protected void startWebCamStream() {
 		stopCamera = false;
 		task = new TaskCamera(stopCamera, grabbedImage, webcamDefault, arrayImg, imageProperty, imageProperty2,
-				imageProperty3, imageProperty3, miniFramePreview, this);
+				imageProperty3, imageProperty4, miniFramePreview, this);
 		Thread th = new Thread(task);
 		labelFPS.textProperty().bind(task.messageProperty());
 		th.setDaemon(true);
 		th.start();
+
+		// imageProperty es la imagen color
+		// imageProperty2 es una imagen con filtro
+		// imageProperty3 es otra imagen blanco y negro
 		imgWebCamCapturedImage.imageProperty().bind(imageProperty);
 		imgWebCamCapturedImage2.imageProperty().bind(imageProperty2);
 		imgWebCamCapturedImage3.imageProperty().bind(imageProperty3);
-		imgWebCamCapturedImage4.imageProperty().bind(imageProperty3);
-		imgWebCamCapturedImage5Main.imageProperty().bind(imageProperty3);
+		imgWebCamCapturedImage4.imageProperty().bind(imageProperty4);
+		imgWebCamCapturedImage5Main.imageProperty().bind(imageProperty2);
 
-		imgPreview1.imageProperty().bind(imageProperty3);
+		imgPreview1.imageProperty().bind(imageProperty2);
 		imgPreview2.imageProperty().bind(imageProperty2);
 		imgPreview3.imageProperty().bind(imageProperty3);
-		imgPreview4.imageProperty().bind(imageProperty);
+		imgPreview4.imageProperty().bind(imageProperty4);
 //		duplicatedCam.imageProperty().bind(imageProperty3);
 		// imgWebCamCapturedImage3.imageProperty().bind(miniFramePreview);
 
@@ -323,15 +343,13 @@ public class WebCamPreviewController implements Initializable {
 				for (int i = 0; i < listConfigs.size(); i++) {
 					String itemcfg = listConfigs.get(i);
 					if (itemcfg.contentEquals(value)) {
-						//abrir monitores
+						// abrir monitores
 //						AppLauncher.getProp("config." + value + ".monitor." + i);
-						
+
 						windows = new WindowUtil().openWindows(imgWebCamCapturedImage2, imgWebCamCapturedImage3,
 								imgWebCamCapturedImage4, imgWebCamCapturedImage5Main,
 //								this.cmbConfig.getSelectionModel().getSelectedItem()
-								value
-								);
-
+								value);
 
 					}
 				}
@@ -408,10 +426,11 @@ public class WebCamPreviewController implements Initializable {
 				if (sign.equals("+")) {
 
 					posicion++;
-					sliderFrame.setValue(posicion);
 					if (posicion == (int) sliderFrame.getMax() - 1) {
 						posicion = 0;
+						System.out.println("reiniciar");
 					}
+					sliderFrame.setValue(posicion);
 				} else {
 					posicion--;
 					sliderFrame.setValue(posicion);
@@ -469,6 +488,19 @@ public class WebCamPreviewController implements Initializable {
 		panePreview4.setStyle("-fx-border-color: #ff0000; -fx-border-width: 5px;");
 	}
 
+	public void check1Click(ActionEvent event) {
+		checkClick(0);
+	}
+
+	public void check2Click(ActionEvent event) {
+		checkClick(1);
+	}
+
+	private void checkClick(int i) {
+		matrix[nMonitor][i] = controlesList.get(i).isSelected() ? 1 : 0;
+//		System.out.println("guarda monitor " + nMonitor + " check " + i +" " + matrix[nMonitor][i]);
+	}
+
 	public void radioImg1Click(ActionEvent event) {
 		selectRadio(1);
 	}
@@ -485,14 +517,23 @@ public class WebCamPreviewController implements Initializable {
 		selectRadio(4);
 	}
 
-	private void selectRadio(int i) {
+	private void selectRadio(int iradio) {
+		nMonitor = iradio - 1;
 		Configuracion configMonitor;
+
+//		System.out.println(iradio);
 		for (int pos = 0; pos < monitorList.size(); pos++) {
 			configMonitor = monitorList.get(pos);
-			configMonitor.getRadio().setSelected(pos == i - 1);
-			if (pos == i - 1) {
-				this.checkFilter1.setSelected(configMonitor.getFilter1() == 1);
-				this.checkFilter2.setSelected(configMonitor.getFilter2() == 1);
+
+			configMonitor.getRadio().setSelected(pos == iradio - 1);
+			if (pos == iradio - 1) {
+				for (int i = 0; i < controlesList.size(); i++) {
+					CheckBox control = controlesList.get(i);
+					
+					control.setSelected(1 == WebCamPreviewController.matrix[pos][i]);
+//					System.out.println("control: " + i + " " + control.isSelected());
+
+				}
 			}
 		}
 	}

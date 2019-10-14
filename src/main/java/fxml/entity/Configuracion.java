@@ -1,7 +1,10 @@
 package fxml.entity;
 
 import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.List;
 
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 
 public class Configuracion {
@@ -10,8 +13,8 @@ public class Configuracion {
 	private Dimension dim;
 	private int posX;
 	private int posY;
-	private int filter1;
-	private int filter2;
+	
+	private List<CheckBox> filtros;
 	private javafx.scene.control.RadioButton radio;
 	
 
@@ -24,6 +27,9 @@ public class Configuracion {
 
 	public Configuracion(RadioButton radioImg1) {
 		radio = radioImg1;
+		filtros = new ArrayList();
+		filtros.add(new CheckBox());
+		filtros.add(new CheckBox());
 	}
 
 	public String getName() {
@@ -58,20 +64,13 @@ public class Configuracion {
 		this.posY = posY;
 	}
 
-	public int getFilter1() {
-		return filter1;
+
+	public List<CheckBox> getFiltros() {
+		return filtros;
 	}
 
-	public void setFilter1(int filter1) {
-		this.filter1 = filter1;
-	}
-
-	public int getFilter2() {
-		return filter2;
-	}
-
-	public void setFilter2(int filter2) {
-		this.filter2 = filter2;
+	public void setFiltros(List<CheckBox> filtros) {
+		this.filtros = filtros;
 	}
 
 	public javafx.scene.control.RadioButton getRadio() {
